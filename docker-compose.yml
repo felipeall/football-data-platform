@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  football-db:
+    image: postgres:15
+    container_name: football-db
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    volumes:
+      - football-db-data:/var/lib/postgresql/data
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    env_file:
+      - .env
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: server --console-address ":9001" /data
+    volumes:
+      - minio_storage:/data
+
+  minio_create_buckets:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set dev_minio http://minio:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
+      /usr/bin/mc rm -r --force dev_minio/${MINIO_DEFAULT_BUCKET};
+      /usr/bin/mc mb dev_minio/${MINIO_DEFAULT_BUCKET};
+      /usr/bin/mc policy set public dev_minio/${MINIO_DEFAULT_BUCKET};
+      exit 0;
+      "
+
+volumes:
+  football-db-data:
+  minio_storage:

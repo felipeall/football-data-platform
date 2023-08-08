@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "football-data-platform"
+version = "0.1.0"
+description = ""
+authors = ["Felipe Allegretti <felipe@allegretti.me>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+scrapy = "2.9.0"
+pandas = "2.0.3"
+sqlalchemy = "2.0.19"
+psycopg2-binary = "2.9.6"
+alembic = "1.11.2"
+loguru = "0.7.0"
+toml = "0.10.2"
+
+[tool.poetry.group.dev.dependencies]
+jupyter = "1.0.0"
+ruff = "0.0.282"
+black = {extras = ["jupyter"], version = "^23.7.0"}
+
+[tool.black]
+line-length = 120
+preview = true
+
+[tool.ruff]
+line-length = 120
+select = [
+    "COM",  # flake8-commas
+    "E",  # pycodestyle errors
+    "F",  # pyflakes
+    "I",  # isort
+    "N",  # pep8-naming
+    "RET",  # flake8-return
+    "Q",  # flake8-quotes
+    "W",  # pycodestyle warnings
+]
