@@ -9,10 +9,12 @@ from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
 
 
-class TransfermarktGRE(CrawlSpider):
-    name = "TransfermarktGRE"
+class TransfermarktBRA1(CrawlSpider):
+    name = "TransfermarktBRA1"
     allowed_domains = ["transfermarkt.com"]
-    start_urls = ["https://www.transfermarkt.com/gremio-porto-alegre/startseite/verein/210"]
+    start_urls = [
+        "https://www.transfermarkt.com/campeonato-brasileiro-serie-a/startseite/wettbewerb/BRA1",
+    ]
 
     DEPTH_LIMIT = 1
     URL_REGEX = {
@@ -21,7 +23,7 @@ class TransfermarktGRE(CrawlSpider):
         "market_values": r"marktwertverlauf-spieler-(?P<id>\d+)",
     }
 
-    le_clubs = LinkExtractor(allow=r"gremio-porto-alegre/startseite/verein/\d+$")
+    le_clubs = LinkExtractor(allow=r"/startseite/verein/\d+$")
     le_players = LinkExtractor(allow=r"/profil/spieler/\d+$", restrict_xpaths="//td[@class='hauptlink']")
     le_market_values = LinkExtractor(
         allow=r"/marktwertverlauf/spieler/\d+$",

@@ -40,12 +40,14 @@ class SofascoreGRE(scrapy.Spider):
         self._save_response_to_json(response, category="players")
 
     def _save_response_to_json(self, response: TextResponse, category: str):
+        assert category in self.URL_REGEX.keys()
+
         file_name = self._parse_file_name(response)
         idx = re.search(self.URL_REGEX.get(category), file_name).groupdict().get("id")
 
         file_path = Path(f"files/sofascore/{category}/{file_name}.json")
         file_path.parent.mkdir(parents=True, exist_ok=True)
-        file_path.write_text(json.dumps({"id": idx, "data": response.json()}))
+        file_path.write_text(json.dumps({"id": idx, "url": response.url, "data": response.json()}))
 
     @staticmethod
     def _parse_file_name(response: TextResponse) -> str:
