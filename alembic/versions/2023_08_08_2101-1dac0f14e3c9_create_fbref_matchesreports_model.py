@@ -7,9 +7,9 @@ Create Date: 2023-08-08 21:01:37.271614
 """
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
 
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = "1dac0f14e3c9"
@@ -143,10 +143,10 @@ def upgrade() -> None:
         sa.Column("aerial_duels_won_pct", sa.Float(), nullable=True),
         sa.Column("id", sa.UUID(), server_default=sa.text("gen_random_uuid()"), nullable=False),
         sa.Column(
-            "created_at", sa.DateTime(timezone=True), server_default=sa.text("CURRENT_TIMESTAMP"), nullable=False
+            "created_at", sa.DateTime(timezone=True), server_default=sa.text("CURRENT_TIMESTAMP"), nullable=False,
         ),
         sa.Column(
-            "updated_at", sa.DateTime(timezone=True), server_default=sa.text("CURRENT_TIMESTAMP"), nullable=False
+            "updated_at", sa.DateTime(timezone=True), server_default=sa.text("CURRENT_TIMESTAMP"), nullable=False,
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_matches_reports")),
         sa.UniqueConstraint("match_id", "team_id", "player_id", name=op.f("uq_matches_reports")),

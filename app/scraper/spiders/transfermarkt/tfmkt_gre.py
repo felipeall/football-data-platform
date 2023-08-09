@@ -17,7 +17,8 @@ class TransfermarktGRE(CrawlSpider):
     le_clubs = LinkExtractor(allow=r"gremio-porto-alegre/startseite/verein/\d+$")
     le_players = LinkExtractor(allow=r"/profil/spieler/\d+$", restrict_xpaths="//td[@class='hauptlink']")
     le_market_value = LinkExtractor(
-        allow=r"/marktwertverlauf/spieler/\d+$", restrict_xpaths="//a[@class='content-link']",
+        allow=r"/marktwertverlauf/spieler/\d+$",
+        restrict_xpaths="//a[@class='content-link']",
     )
 
     rules = (

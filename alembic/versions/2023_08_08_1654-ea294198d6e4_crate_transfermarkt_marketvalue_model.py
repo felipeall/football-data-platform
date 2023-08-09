@@ -33,10 +33,16 @@ def upgrade() -> None:
         sa.Column("market_value", sa.Integer(), nullable=False),
         sa.Column("id", sa.UUID(), server_default=sa.text("gen_random_uuid()"), nullable=False),
         sa.Column(
-            "created_at", sa.DateTime(timezone=True), server_default=sa.text("CURRENT_TIMESTAMP"), nullable=False,
+            "created_at",
+            sa.DateTime(timezone=True),
+            server_default=sa.text("CURRENT_TIMESTAMP"),
+            nullable=False,
         ),
         sa.Column(
-            "updated_at", sa.DateTime(timezone=True), server_default=sa.text("CURRENT_TIMESTAMP"), nullable=False,
+            "updated_at",
+            sa.DateTime(timezone=True),
+            server_default=sa.text("CURRENT_TIMESTAMP"),
+            nullable=False,
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_market_value")),
         sa.UniqueConstraint("player_id", "date", name=op.f("uq_market_value")),
