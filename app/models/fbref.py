@@ -6,10 +6,10 @@ from app.models.base import AuditMixin, Base, IDMixin
 
 
 @dataclass
-class MatchesEvents(Base, IDMixin, AuditMixin):
-    __tablename__ = "matches_events"
+class MatchesReports(Base, IDMixin, AuditMixin):
+    __tablename__ = "matches_reports"
     __table_args__ = (
-        UniqueConstraint("match_id", "team_id", "player_id", name="uk_match_team_player"),
+        UniqueConstraint("match_id", "team_id", "player_id"),
         {"schema": "fbref"},
     )
 
