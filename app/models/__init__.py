@@ -1,3 +1,3 @@
-from app.models.fbref import MatchesReports  # noqa: F401
-from app.models.tfmkt import MarketValue  # noqa: F401
-from app.models.sofascore import MatchesReports  # noqa: F401
+from app.models.fbref import FBRefMatchesReports  # noqa: F401
+from app.models.sofascore import SofascoreMatchesReports  # noqa: F401
+from app.models.tfmkt import TfmktMarketValue  # noqa: F401

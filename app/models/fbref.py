@@ -6,7 +6,7 @@ from app.models.base import AuditMixin, Base, IDMixin
 
 
 @dataclass
-class MatchesReports(Base, IDMixin, AuditMixin):
+class FBRefMatchesReports(Base, IDMixin, AuditMixin):
     __tablename__ = "matches_reports"
     __table_args__ = (
         UniqueConstraint("match_id", "team_id", "player_id"),

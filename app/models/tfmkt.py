@@ -7,7 +7,7 @@ from app.models.base import AuditMixin, Base, IDMixin
 
 
 @dataclass
-class MarketValue(Base, IDMixin, AuditMixin):
+class TfmktMarketValue(Base, IDMixin, AuditMixin):
     __tablename__ = "market_value"
     __table_args__ = (
         UniqueConstraint("player_id", "date"),

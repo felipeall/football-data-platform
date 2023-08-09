@@ -1,12 +1,13 @@
+# ruff: noqa: N815
 from dataclasses import dataclass
 
-from sqlalchemy import Column, Integer, String, UniqueConstraint, Float
+from sqlalchemy import Column, Float, Integer, String, UniqueConstraint
 
 from app.models.base import AuditMixin, Base, IDMixin
 
 
 @dataclass
-class MatchesReports(Base, IDMixin, AuditMixin):
+class SofascoreMatchesReports(Base, IDMixin, AuditMixin):
     __tablename__ = "matches_reports"
     __table_args__ = (
         UniqueConstraint("match_id", "player_id"),
@@ -15,7 +16,6 @@ class MatchesReports(Base, IDMixin, AuditMixin):
 
     match_id: str = Column(String, nullable=False)
     player_id: str = Column(String, nullable=False)
-
     totalPass: int = Column(Integer, nullable=True)
     accuratePass: int = Column(Integer, nullable=True)
     totalLongBalls: int = Column(Integer, nullable=True)
@@ -59,4 +59,3 @@ class MatchesReports(Base, IDMixin, AuditMixin):
     penaltyMiss: int = Column(Integer, nullable=True)
     penaltyConceded: int = Column(Integer, nullable=True)
     bigChanceCreated: int = Column(Integer, nullable=True)
-

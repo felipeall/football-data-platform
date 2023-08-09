@@ -143,10 +143,16 @@ def upgrade() -> None:
         sa.Column("aerial_duels_lost", sa.Integer(), nullable=True),
         sa.Column("aerial_duels_won_pct", sa.Float(), nullable=True),
         sa.Column(
-            "created_at", sa.DateTime(timezone=True), server_default=sa.text("CURRENT_TIMESTAMP"), nullable=False,
+            "created_at",
+            sa.DateTime(timezone=True),
+            server_default=sa.text("CURRENT_TIMESTAMP"),
+            nullable=False,
         ),
         sa.Column(
-            "updated_at", sa.DateTime(timezone=True), server_default=sa.text("CURRENT_TIMESTAMP"), nullable=False,
+            "updated_at",
+            sa.DateTime(timezone=True),
+            server_default=sa.text("CURRENT_TIMESTAMP"),
+            nullable=False,
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_matches_reports")),
         sa.UniqueConstraint("match_id", "team_id", "player_id", name=op.f("uq_matches_reports")),
