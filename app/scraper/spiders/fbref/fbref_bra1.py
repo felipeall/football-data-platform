@@ -13,6 +13,10 @@ class FBRefBRA1(CrawlSpider):
     name = "FBRefBRA1"
     allowed_domains = ["fbref.com"]
     start_urls = ["https://fbref.com/en/comps/24/Serie-A-Stats"]
+    custom_settings = {
+        "AUTOTHROTTLE_TARGET_CONCURRENCY": 1.0,
+        "CONCURRENT_REQUESTS": 1,
+    }
 
     DEPTH_LIMIT = 1
     URL_REGEX = {

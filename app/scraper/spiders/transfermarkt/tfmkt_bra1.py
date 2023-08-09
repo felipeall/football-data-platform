@@ -1,8 +1,6 @@
 import json
-import random
 import re
 from pathlib import Path
-from time import sleep
 
 from scrapy.http import HtmlResponse
 from scrapy.linkextractors import LinkExtractor
@@ -55,13 +53,7 @@ class TransfermarktBRA1(CrawlSpider):
         file_path.parent.mkdir(parents=True, exist_ok=True)
         file_path.write_text(json.dumps({"id": idx, "url": response.url, "data": response.text}))
 
-        self._wait()
-
     @staticmethod
     def _parse_file_name(response: HtmlResponse) -> str:
         page_name = response.url.split("://")[-1].replace("/", "-")
         return "".join([i if ord(i) < 128 else "-" for i in page_name])
-
-    @staticmethod
-    def _wait() -> None:
-        sleep(random.uniform(2, 3))
