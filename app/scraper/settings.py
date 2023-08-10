@@ -16,7 +16,7 @@ USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
 )
 
-
+DEPTH_LIMIT = 3
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = "scraper (+http://www.yourdomain.com)"
 
