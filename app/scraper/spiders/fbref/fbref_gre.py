@@ -18,7 +18,6 @@ class FBRefGRE(CrawlSpider):
         "CONCURRENT_REQUESTS": 1,
     }
 
-    DEPTH_LIMIT = 1
     URL_REGEX = {
         "clubs": r"squads-(?P<id>\w+)-",
         "matches": r"matches-(?P<id>\w+)-",
