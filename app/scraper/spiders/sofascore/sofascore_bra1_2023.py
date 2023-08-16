@@ -28,7 +28,9 @@ class SofascoreBRA12023(Spider):
         page_id = 0
         for url in self.start_urls:
             yield Request(
-                url.format(page_id=page_id), meta={"start_url": url, "page_id": page_id}, callback=self.parse_matches,
+                url.format(page_id=page_id),
+                meta={"start_url": url, "page_id": page_id},
+                callback=self.parse_matches,
             )
 
     def parse_matches(self, response: TextResponse):
