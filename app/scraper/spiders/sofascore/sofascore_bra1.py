@@ -6,8 +6,8 @@ from scrapy import Request, Spider
 from scrapy.http import TextResponse
 
 
-class SofascoreBRA12023(Spider):
-    name = "SofascoreBRA12023"
+class SofascoreBRA1(Spider):
+    name = "SofascoreBRA1"
     allowed_domains = ["api.sofascore.com"]
     start_urls = [
         "https://api.sofascore.com/api/v1/unique-tournament/325/season/48982/events/last/{page_id}",
