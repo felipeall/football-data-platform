@@ -2,7 +2,8 @@ import json
 import re
 from pathlib import Path
 
-from scrapy.http import HtmlResponse
+import requests
+from scrapy.http import HtmlResponse, Request
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
 
@@ -16,20 +17,15 @@ class TransfermarktGRE(CrawlSpider):
     URL_REGEX = {
         "clubs": r"verein-(?P<id>\d+)",
         "players": r"profil-spieler-(?P<id>\d+)",
-        "market_values": r"marktwertverlauf-spieler-(?P<id>\d+)",
+        "market_value": r"-ceapi-marketValueDevelopment-graph-(?P<id>\d+)",
     }
 
     le_clubs = LinkExtractor(allow=r"gremio-porto-alegre/startseite/verein/\d+$")
     le_players = LinkExtractor(allow=r"/profil/spieler/\d+$", restrict_xpaths="//td[@class='hauptlink']")
-    le_market_values = LinkExtractor(
-        allow=r"/marktwertverlauf/spieler/\d+$",
-        restrict_xpaths="//a[@class='content-link']",
-    )
 
     rules = (
         Rule(link_extractor=le_clubs, callback="process_clubs", follow=True),
-        Rule(link_extractor=le_players, callback="process_players", follow=True),
-        Rule(link_extractor=le_market_values, callback="process_market_values", follow=True),
+        Rule(link_extractor=le_players, callback="process_players", follow=False),
     )
 
     def process_clubs(self, response: HtmlResponse) -> None:
@@ -38,8 +34,13 @@ class TransfermarktGRE(CrawlSpider):
     def process_players(self, response: HtmlResponse) -> None:
         self._save_response_to_json(response=response, category="players")
 
-    def process_market_values(self, response: HtmlResponse) -> None:
-        self._save_response_to_json(response=response, category="market_values")
+        # Market value
+        player_id = response.url.split("/")[-1]
+        url = "https://www.transfermarkt.com/ceapi/marketValueDevelopment/graph/{player_id}"
+        yield Request(url=url.format(player_id=player_id), callback=self.process_market_value)
+
+    def process_market_value(self, response: HtmlResponse):
+        self._save_response_to_json(response=response, category="market_value")
 
     def _save_response_to_json(self, response: HtmlResponse, category: str) -> None:
         assert category in self.URL_REGEX.keys()

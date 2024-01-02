@@ -1,4 +1,4 @@
-"""Crate Transfermarkt MarketValue model
+"""Create Transfermarkt MarketValue model
 
 Revision ID: ea294198d6e4
 Revises: 8a0fd60cefcf
@@ -31,7 +31,8 @@ def upgrade() -> None:
         sa.Column("player_id", sa.String(), nullable=False),
         sa.Column("club_id", sa.String(), nullable=False),
         sa.Column("date", sa.Date(), nullable=False),
-        sa.Column("market_value", sa.Integer(), nullable=False),
+        sa.Column("value", sa.Integer(), nullable=False),
+        sa.Column("age", sa.Integer(), nullable=False),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),

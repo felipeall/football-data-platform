@@ -53,7 +53,7 @@ docker compose up -d --build
 
 5. Run the database migrations:
 ```bash
-alemic upgrade head
+alembic upgrade head
 ```
 
 6. Run the desired spider:

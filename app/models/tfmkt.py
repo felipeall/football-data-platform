@@ -17,4 +17,5 @@ class TfmktMarketValue(Base, IDMixin, AuditMixin):
     player_id: str = Column(String, nullable=False)
     club_id: str = Column(String, nullable=False)
     date: date = Column(Date, nullable=False)
-    market_value: int = Column(Integer, nullable=False)
+    value: int = Column(Integer, nullable=False)
+    age: int = Column(Integer, nullable=False)
