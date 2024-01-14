@@ -13,7 +13,8 @@ SPIDER_MODULES = ["app.scraper.spiders"]
 NEWSPIDER_MODULE = "app.scraper.spiders"
 FEED_EXPORT_ENCODING = "utf-8"
 USER_AGENT = (
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0"
+    " Safari/537.36"
 )
 
 DEPTH_LIMIT = 3
@@ -94,3 +95,6 @@ AUTOTHROTTLE_DEBUG = False
 # Set settings whose default value is deprecated to a future-proof value
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
+
+# Use this setting to customize the TLS/SSL method used by the default HTTP/1.1 downloader.
+DOWNLOADER_CLIENT_TLS_METHOD = "TLSv1.2"
