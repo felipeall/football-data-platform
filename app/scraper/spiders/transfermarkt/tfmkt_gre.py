@@ -2,7 +2,6 @@ import json
 import re
 from pathlib import Path
 
-import requests
 from scrapy.http import HtmlResponse, Request
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
