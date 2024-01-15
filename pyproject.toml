@@ -7,19 +7,19 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-scrapy = "2.9.0"
-pandas = "2.0.3"
-sqlalchemy = "2.0.19"
-psycopg2-binary = "2.9.6"
-alembic = "1.11.2"
-loguru = "0.7.0"
+scrapy = "^2.11.0"
+pandas = "^2.1.4"
+sqlalchemy = "^2.0.25"
+psycopg2-binary = "^2.9.9"
+alembic = "^1.13.1"
+loguru = "^0.7.2"
 toml = "0.10.2"
-dateparser = "^1.1.8"
+dateparser = "^1.2.0"
 
 [tool.poetry.group.dev.dependencies]
-jupyter = "1.0.0"
-ruff = "0.0.282"
-black = {extras = ["jupyter"], version = "^23.7.0"}
+jupyter = "^1.0.0"
+ruff = "^0.1.13"
+black = {extras = ["jupyter"], version = "^23.12.1"}
 
 [tool.black]
 line-length = 120
