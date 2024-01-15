@@ -14,24 +14,33 @@ class FBRefBRA1(CrawlSpider):
     allowed_domains = ["fbref.com"]
     start_urls = ["https://fbref.com/en/comps/24/Serie-A-Stats"]
     custom_settings = {
-        "AUTOTHROTTLE_TARGET_CONCURRENCY": 1.0,
-        "CONCURRENT_REQUESTS": 1,
+        "AUTOTHROTTLE_TARGET_CONCURRENCY": 3.0,
+        "CONCURRENT_REQUESTS": 3,
     }
 
     URL_REGEX = {
-        "clubs": r"squads-(?P<id>\w+)-",
-        "matches": r"matches-(?P<id>\w+)-",
-        "players": r"players-(?P<id>\w+)-",
+        "clubs": r"-squads-(?P<id>\w+)-",
+        "matches": r"-matches-(?P<id>\w+)-",
+        "players": r"-players-(?P<id>\w+)-(?!scout)",
+        "scouting_reports": r"-players-(?P<id>\w+)-scout-",
     }
 
-    le_clubs = LinkExtractor(allow=r"/squads/\w+/[\w\-]+$", restrict_xpaths="//td[@data-stat='team']")
+    le_clubs = LinkExtractor(
+        allow=r"/squads/\w+/[\w\-]+$",
+        restrict_xpaths="//table[./caption[contains(text(),'Regular season Table')]]//td[@data-stat='team']",
+    )
     le_matches = LinkExtractor(allow=r"/matches/\w+/[\w-]+$", restrict_xpaths="//td[@data-stat='match_report']")
     le_players = LinkExtractor(allow=r"/players/\w+/[\w-]+$", restrict_xpaths="//th[@data-stat='player']")
+    le_scouting_reports = LinkExtractor(
+        allow=r"/players/\w+/scout/\w+/[\w-]+-Scouting-Report$",
+        restrict_xpaths="//div[@id='all_scout_summary']",
+    )
 
     rules = (
         Rule(le_clubs, callback="parse_clubs", follow=True),
-        Rule(le_matches, callback="parse_matches", follow=False),
-        Rule(le_players, callback="parse_players", follow=False),
+        # Rule(le_matches, callback="parse_matches", follow=False),
+        Rule(le_players, callback="parse_players", follow=True),
+        Rule(le_scouting_reports, callback="parse_scouting_reports", follow=False),
     )
 
     def parse_clubs(self, response: HtmlResponse) -> None:
@@ -43,7 +52,7 @@ class FBRefBRA1(CrawlSpider):
     def parse_players(self, response: HtmlResponse) -> None:
         self._save_response_to_json(response=response, category="players")
 
-    def _save_response_to_json(self, response: HtmlResponse, category: str):
+    def _save_response_to_json(self, response: HtmlResponse, category: str) -> None:
         assert category in self.URL_REGEX.keys()
 
         file_name = self._parse_file_name(response)
