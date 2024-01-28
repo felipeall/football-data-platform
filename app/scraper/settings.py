@@ -67,9 +67,10 @@ CONCURRENT_REQUESTS = 8
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-# ITEM_PIPELINES = {
-#    "app.scraper.pipelines.FootballDataScraperPipeline": 300,
-# }
+ITEM_PIPELINES = {
+    "app.scraper.pipelines.ParseItemPipeline": 1,
+    "app.scraper.pipelines.SaveItemPipeline": 2,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
@@ -98,3 +99,6 @@ TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 
 # Use this setting to customize the TLS/SSL method used by the default HTTP/1.1 downloader.
 DOWNLOADER_CLIENT_TLS_METHOD = "TLSv1.2"
+
+# Enable custom logging
+LOG_FORMATTER = "app.scraper.loggers.QuietLogFormatter"
