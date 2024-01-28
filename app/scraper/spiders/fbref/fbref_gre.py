@@ -14,8 +14,8 @@ class FBRefGRE(CrawlSpider):
     allowed_domains = ["fbref.com"]
     start_urls = ["https://fbref.com/en/squads/d5ae3703/Gremio-Stats"]
     custom_settings = {
-        "AUTOTHROTTLE_TARGET_CONCURRENCY": 3.0,
-        "CONCURRENT_REQUESTS": 3,
+        "AUTOTHROTTLE_TARGET_CONCURRENCY": 1.0,
+        "CONCURRENT_REQUESTS": 1,
     }
 
     URL_REGEX = {

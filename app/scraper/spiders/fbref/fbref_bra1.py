@@ -14,8 +14,8 @@ class FBRefBRA1(CrawlSpider):
     allowed_domains = ["fbref.com"]
     start_urls = ["https://fbref.com/en/comps/24/Serie-A-Stats"]
     custom_settings = {
-        "AUTOTHROTTLE_TARGET_CONCURRENCY": 3.0,
-        "CONCURRENT_REQUESTS": 3,
+        "AUTOTHROTTLE_TARGET_CONCURRENCY": 1.0,
+        "CONCURRENT_REQUESTS": 1,
     }
 
     URL_REGEX = {
@@ -51,6 +51,9 @@ class FBRefBRA1(CrawlSpider):
 
     def parse_players(self, response: HtmlResponse) -> None:
         self._save_response_to_json(response=response, category="players")
+
+    def parse_scouting_reports(self, response: HtmlResponse) -> None:
+        self._save_response_to_json(response=response, category="scouting_reports")
 
     def _save_response_to_json(self, response: HtmlResponse, category: str) -> None:
         assert category in self.URL_REGEX.keys()
