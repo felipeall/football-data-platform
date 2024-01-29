@@ -21,6 +21,12 @@ class ParseItemPipeline:
             "players": r"-players-(?P<id>\w+)-(?!scout)",
             "scouting_reports": r"-players-(?P<id>\w+)-scout-",
         },
+        "sofascore": {
+            "teams": r"team-(?P<id>\d+)",
+            "matches": r"unique-tournament-(?P<id>\d+)-season-(?P<season_id>\d+)-events",
+            "matches_events": r"event-(?P<id>\d+)-lineups",
+            "players": r"player-(?P<id>\d+)",
+        },
     }
 
     def open_spider(self, spider):
