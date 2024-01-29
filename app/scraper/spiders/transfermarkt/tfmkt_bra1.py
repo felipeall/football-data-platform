@@ -2,7 +2,7 @@ from scrapy.http import HtmlResponse, Request
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
 
-from app.scraper.items import TfmktItem
+from app.scraper.items import ScrappedItem
 
 
 class TransfermarktBRA1(CrawlSpider):
@@ -36,7 +36,7 @@ class TransfermarktBRA1(CrawlSpider):
     )
 
     def _process_results(self, response: HtmlResponse, path: str):
-        yield TfmktItem(
+        yield ScrappedItem(
             url=response.url,
             data=response.text,
             path=path,

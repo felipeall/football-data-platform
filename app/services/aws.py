@@ -26,5 +26,5 @@ class AWS:
         log.debug("Initialized AWS client!")
 
     def save_to_json(self, data: dict, path: str, file_name: str):
-        log.info(f"Saving {file_name}.json @ {path}")
+        log.debug(f"Saving {file_name}.json @ {path}")
         self.client.put_object(Body=json.dumps(data), Bucket=settings.AWS_BUCKET_NAME, Key=f"{path}/{file_name}.json")

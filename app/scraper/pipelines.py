@@ -15,6 +15,12 @@ class ParseItemPipeline:
             "players": r"profil-spieler-(?P<id>\d+)",
             "market_value": r"-ceapi-marketValueDevelopment-graph-(?P<id>\d+)",
         },
+        "fbref": {
+            "clubs": r"-squads-(?P<id>\w+)-",
+            "matches": r"-matches-(?P<id>\w+)-",
+            "players": r"-players-(?P<id>\w+)-(?!scout)",
+            "scouting_reports": r"-players-(?P<id>\w+)-scout-",
+        },
     }
 
     def open_spider(self, spider):

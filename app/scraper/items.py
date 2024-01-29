@@ -1,7 +1,7 @@
 import scrapy
 
 
-class TfmktItem(scrapy.Item):
+class ScrappedItem(scrapy.Item):
     url = scrapy.Field()
     data = scrapy.Field()
     path = scrapy.Field()
