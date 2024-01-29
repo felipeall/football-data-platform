@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from sqlalchemy import REAL, Column, Float, Integer, String, UniqueConstraint
+from sqlalchemy import REAL, Column, Date, Float, Integer, String, UniqueConstraint
 
 from app.models.base import AuditMixin, Base, IDMixin
 
@@ -253,3 +253,18 @@ class FBRefScoutingReports(Base, AuditMixin):
     aerials_won = Column(REAL)
     aerials_lost = Column(REAL)
     pct_of_aerials_won = Column(REAL)
+
+
+@dataclass
+class FBRefPlayers(Base, AuditMixin):
+    __tablename__ = "players"
+    __table_args__ = ({"schema": "fbref"},)
+
+    id = Column(String, primary_key=True)
+    name = Column(String)
+    full_name = Column(String)
+    dob = Column(Date)
+    country = Column(String)
+    club_url = Column(String)
+    club_name = Column(String)
+    position = Column(String)
