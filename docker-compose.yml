@@ -30,8 +30,7 @@ services:
     entrypoint: >
       /bin/sh -c "
       /usr/bin/mc alias set dev_minio http://minio:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
-      /usr/bin/mc rm -r --force dev_minio/${MINIO_DEFAULT_BUCKET};
-      /usr/bin/mc mb dev_minio/${MINIO_DEFAULT_BUCKET};
+      /usr/bin/mc mb --ignore-existing dev_minio/${MINIO_DEFAULT_BUCKET};
       /usr/bin/mc policy set public dev_minio/${MINIO_DEFAULT_BUCKET};
       exit 0;
       "

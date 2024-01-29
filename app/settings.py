@@ -1,5 +1,7 @@
 from typing import Optional
 
+from pydantic import PostgresDsn, field_validator
+from pydantic_core.core_schema import ValidationInfo
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -9,7 +11,22 @@ class Settings(BaseSettings):
     # Postgres
     POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = "postgres"
+    POSTGRES_HOST: str = "localhost"
     POSTGRES_DB: str = "postgres"
+    SQLALCHEMY_DATABASE_URI: str = ""
+
+    @field_validator("SQLALCHEMY_DATABASE_URI", mode="before")
+    @classmethod
+    def assemble_db_connection(cls, v: str, values: ValidationInfo) -> str:
+        if v:
+            return v
+        return PostgresDsn.build(
+            scheme="postgresql+psycopg2",
+            username=values.data.get("POSTGRES_USER"),
+            password=values.data.get("POSTGRES_PASSWORD"),
+            host=values.data.get("POSTGRES_HOST"),
+            path=values.data.get("POSTGRES_DB"),
+        ).unicode_string()
 
     # MinIO
     MINIO_ROOT_USER: Optional[str] = "admin"
