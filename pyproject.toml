@@ -15,6 +15,8 @@ alembic = "^1.13.1"
 loguru = "^0.7.2"
 toml = "0.10.2"
 dateparser = "^1.2.0"
+boto3 = "^1.34.29"
+pydantic-settings = "^2.1.0"
 
 [tool.poetry.group.dev.dependencies]
 jupyter = "^1.0.0"

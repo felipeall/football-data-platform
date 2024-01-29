@@ -38,7 +38,7 @@ cd football-data-platform
 2. Create a Poetry virtual environment and install the dependencies:
 ```bash
 poetry shell
-poetry install
+poetry install --no-root
 ```
 
 3. Create a `.env` file in the root directory:
