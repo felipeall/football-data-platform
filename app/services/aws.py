@@ -28,3 +28,17 @@ class AWS:
     def save_to_json(self, data: dict, path: str, file_name: str):
         log.debug(f"Saving {file_name}.json @ {path}")
         self.client.put_object(Body=json.dumps(data), Bucket=settings.AWS_BUCKET_NAME, Key=f"{path}/{file_name}.json")
+
+    def read_from_json(self, file_path: str) -> dict:
+        return json.loads(
+            self.client.get_object(Bucket=settings.AWS_BUCKET_NAME, Key=file_path).get("Body").read().decode("utf-8"),
+        )
+
+    def count_files(self, path: str) -> int:
+        return len(self.client.list_objects(Bucket=settings.AWS_BUCKET_NAME, Prefix=path).get("Contents", []))
+
+    def list_files(self, path: str) -> list:
+        return [
+            i.get("Key")
+            for i in self.client.list_objects(Bucket=settings.AWS_BUCKET_NAME, Prefix=path).get("Contents", [])
+        ]
