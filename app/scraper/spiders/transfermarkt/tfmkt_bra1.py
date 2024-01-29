@@ -1,25 +1,15 @@
-import json
-import re
-from pathlib import Path
-
 from scrapy.http import HtmlResponse, Request
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
+
+from app.scraper.items import TfmktItem
 
 
 class TransfermarktBRA1(CrawlSpider):
     name = "TransfermarktBRA1"
     allowed_domains = ["transfermarkt.com"]
-    start_urls = [
-        "https://www.transfermarkt.com/campeonato-brasileiro-serie-a/startseite/wettbewerb/BRA1",
-    ]
-
-    URL_REGEX = {
-        "competitions": r"startseite-wettbewerb-(?P<id>\w+)-saison_id-(?P<season_id>\d+)",
-        "clubs": r"startseite-verein-(?P<id>\d+)-saison_id-(?P<season_id>\d+)",
-        "players": r"profil-spieler-(?P<id>\d+)",
-        "market_value": r"-ceapi-marketValueDevelopment-graph-(?P<id>\d+)",
-    }
+    start_urls = ["https://www.transfermarkt.com/campeonato-brasileiro-serie-a/startseite/wettbewerb/BRA1"]
+    URL_MARKET_VALUE = "https://www.transfermarkt.com/ceapi/marketValueDevelopment/graph/{player_id}"
 
     le_competitions = LinkExtractor(
         allow=r"/startseite/wettbewerb/\w+/saison_id/\d+$",
@@ -33,45 +23,30 @@ class TransfermarktBRA1(CrawlSpider):
         allow=r"/profil/spieler/\d+$",
         restrict_xpaths="//div[@id='yw1']//td[@class='hauptlink']",
     )
-    le_market_value = LinkExtractor(
-        allow=r"/marktwertverlauf/spieler/\d+$",
-        restrict_xpaths="//a[@class='content-link']",
-    )
 
     rules = (
-        Rule(link_extractor=le_competitions, callback="process_competitions", follow=True),
-        Rule(link_extractor=le_clubs, callback="process_clubs", follow=True),
-        Rule(link_extractor=le_players, callback="process_players", follow=False),
+        Rule(
+            link_extractor=le_competitions,
+            follow=True,
+            callback="_process_results",
+            cb_kwargs={"path": "competitions"},
+        ),
+        Rule(link_extractor=le_clubs, follow=True, callback="_process_results", cb_kwargs={"path": "clubs"}),
+        Rule(link_extractor=le_players, follow=False, callback="_process_results", cb_kwargs={"path": "players"}),
     )
 
-    def process_competitions(self, response: HtmlResponse) -> None:
-        self._save_response_to_json(response=response, category="competitions")
+    def _process_results(self, response: HtmlResponse, path: str):
+        yield TfmktItem(
+            url=response.url,
+            data=response.text,
+            path=path,
+        )
 
-    def process_clubs(self, response: HtmlResponse) -> None:
-        self._save_response_to_json(response=response, category="clubs")
-
-    def process_players(self, response: HtmlResponse) -> None:
-        self._save_response_to_json(response=response, category="players")
-
-        # Market value
-        player_id = response.url.split("/")[-1]
-        url = "https://www.transfermarkt.com/ceapi/marketValueDevelopment/graph/{player_id}"
-        yield Request(url=url.format(player_id=player_id), callback=self.process_market_value)
-
-    def process_market_value(self, response: HtmlResponse) -> None:
-        self._save_response_to_json(response=response, category="market_value")
-
-    def _save_response_to_json(self, response: HtmlResponse, category: str) -> None:
-        assert category in self.URL_REGEX.keys()
-
-        file_name = self._parse_file_name(response)
-        idx = re.search(self.URL_REGEX.get(category), file_name).groupdict().get("id")
-
-        file_path = Path(f"files/tfmkt/{category}/{file_name}.json")
-        file_path.parent.mkdir(parents=True, exist_ok=True)
-        file_path.write_text(json.dumps({"id": idx, "url": response.url, "data": response.text}))
-
-    @staticmethod
-    def _parse_file_name(response: HtmlResponse) -> str:
-        page_name = response.url.split("://")[-1].replace("/", "-")
-        return "".join([i if ord(i) < 128 else "-" for i in page_name])
+        if path == "players":
+            player_id = response.url.split("/")[-1]
+            url = "https://www.transfermarkt.com/ceapi/marketValueDevelopment/graph/{player_id}"
+            yield Request(
+                url=url.format(player_id=player_id),
+                callback=self._process_results,
+                cb_kwargs={"path": "market_value"},
+            )
