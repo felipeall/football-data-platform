@@ -1,9 +1,16 @@
 from logging.config import fileConfig
 
+from alembic_utils.replaceable_entity import register_entities
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
-from app.models.base import Base
+from app.models import base, fbref
+
+register_entities([
+    base.fun_refresh_updated_at,
+    fbref.FBrefPlayers.trg_refresh_updated_at(),
+    fbref.FBrefScoutingReports.trg_refresh_updated_at(),
+])
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -16,9 +23,7 @@ if config.config_file_name is not None:
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
-target_metadata = Base.metadata
+target_metadata = base.Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

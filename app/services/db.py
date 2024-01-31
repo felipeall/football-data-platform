@@ -2,9 +2,12 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 import pandas as pd
+from loguru import logger
 from pandas.io.sql import SQLTable
-from sqlalchemy import Connection, Engine, MetaData, Table, create_engine
+from sqlalchemy import MetaData, Table, create_engine
 from sqlalchemy.dialects.postgresql import Insert, insert
+from sqlalchemy.engine import Connection, Engine
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 
 from app.models.base import Base
@@ -55,7 +58,11 @@ class Database:
         )
 
     def load_dict(self, data: dict, table: str, schema: Optional[str] = None) -> None:
+        schema = "public" if schema is None else schema
         sql_table = Table(table, Base.metadata, schema=schema)
         upsert_stmt = self.build_upsert_stmt(sql_table, [data])
         with self.engine.begin() as conn:
-            conn.execute(upsert_stmt)
+            try:
+                conn.execute(upsert_stmt)
+            except IntegrityError as e:
+                logger.error(f"Error loading to {schema}.{table}: {e.orig.diag.message_detail}")

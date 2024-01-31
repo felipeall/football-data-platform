@@ -2,6 +2,7 @@ import uuid
 from dataclasses import dataclass
 from datetime import datetime
 
+from alembic_utils.pg_function import PGFunction
 from sqlalchemy import Column, DateTime, func, text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declarative_base
@@ -18,19 +19,22 @@ Base.metadata = MetaData(
     },
 )
 
+fun_refresh_updated_at = PGFunction(
+    schema="public",
+    signature="refresh_updated_at()",
+    definition="""
+    RETURNS TRIGGER AS $$
+    BEGIN
+        NEW.updated_at = now();
+        RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+    """,
+)
+
 
 @dataclass
-class IDMixin:
-    id: uuid.UUID = Column(
-        UUID(as_uuid=True),
-        primary_key=True,
-        default=uuid.uuid4,
-        server_default=text("gen_random_uuid()"),
-    )
-
-
-@dataclass
-class AuditMixin:
+class BaseMixin:
     created_at: datetime = Column(
         DateTime(timezone=True),
         nullable=False,
@@ -40,4 +44,17 @@ class AuditMixin:
         DateTime(timezone=True),
         nullable=False,
         server_default=func.current_timestamp(),
+    )
+
+    def to_dict(self) -> dict:
+        return {key: value for key, value in self.__dict__.items() if not key.startswith("_")}
+
+
+@dataclass
+class IDMixin:
+    id: uuid.UUID = Column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4,
+        server_default=text("gen_random_uuid()"),
     )
