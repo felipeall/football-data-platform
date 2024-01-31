@@ -5,12 +5,13 @@ import dateparser
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 
+from app.models import fbref
 from app.services.aws import AWS
 from app.services.db import Database
 
 
 @dataclass
-class FbrefPlayers:
+class FBrefPlayers:
     aws: AWS = AWS()
     db: Database = Database()
     files_path: str = "files/fbref/players"
@@ -41,25 +42,25 @@ class FbrefPlayers:
             club_url = club_url.get("href") if club_url else None
 
             position = soup.find("div", {"id": "meta"}).find("strong", string=re.compile("Position"))
-            position = position.next_sibling.replace("\xa0", "").replace("▪", "").strip() if position else None
+            position = position.next_sibling.text.replace("\xa0", "").replace("▪", "").strip() if position else None
 
-            player_data = {
-                "id": data["id"],
-                "name": name,
-                "full_name": full_name,
-                "dob": dob,
-                "country": country,
-                "club_url": club_url,
-                "club_name": club_name,
-                "position": position,
-            }
+            player = fbref.FBrefPlayers(
+                id=data["id"],
+                name=name,
+                full_name=full_name,
+                dob=dob,
+                country=country,
+                club_name=club_name,
+                club_url=club_url,
+                position=position,
+            )
 
-            self.db.load_dict(data=player_data, table="players", schema="fbref")
+            self.db.load_dict(data=player.to_dict(), table="players", schema="fbref")
 
 
 def main():
-    fbref = FbrefPlayers()
-    fbref.run()
+    fbref_players = FBrefPlayers()
+    fbref_players.run()
 
 
 if __name__ == "__main__":

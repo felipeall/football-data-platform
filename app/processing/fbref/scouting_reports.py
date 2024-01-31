@@ -7,6 +7,7 @@ import pandas as pd
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 
+from app.models import fbref
 from app.services.aws import AWS
 from app.services.db import Database
 
@@ -23,7 +24,7 @@ COLS_TO_DROP: list = [
 
 
 @dataclass
-class FbrefScoutingReports:
+class FBrefScoutingReports:
     """Process the scouting reports from FBref."""
 
     aws: AWS = AWS()
@@ -38,28 +39,30 @@ class FbrefScoutingReports:
         for file in (pbar := tqdm(files)):
             pbar.set_description(file)
             data = self.aws.read_from_json(file_path=file)
-            df = self.process_file(data)
-            if df is not None:
-                self.db.load_dataframe(df=df, table="scouting_reports", schema="fbref")
+            scouting_report = self.process_file(data)
+            if scouting_report:
+                self.db.load_dict(data=scouting_report.to_dict(), table="scouting_reports", schema="fbref")
 
-    def process_file(self, data: dict) -> Optional[pd.DataFrame]:
+    def process_file(self, data: dict) -> Optional[fbref.FBrefScoutingReports]:
         """Process a file."""
         soup = BeautifulSoup(data["data"], "lxml")
         if self.is_goalkeeper(soup=soup):
             return None
 
-        return (
+        df = (
             pd.read_html(io.StringIO(data["data"]))[-1]
             .dropna()
             .T.pipe(self.set_first_row_as_headers)
             .pipe(self.keep_only_per_90)
             .drop(columns=self.cols_to_drop)
             .pipe(self.drop_duplicated_columns)
-            .map(self.convert_to_numeric)
+            .map(self.convert_col_to_numeric)
             .rename(columns=self.normalize_col_name)
             .assign(player_id=data["id"])
             .assign(minutes_played=self.extract_minutes_played(soup=soup))
         )
+
+        return fbref.FBrefScoutingReports(**df.to_dict("records")[0])
 
     @staticmethod
     def extract_minutes_played(soup: BeautifulSoup) -> int:
@@ -103,16 +106,16 @@ class FbrefScoutingReports:
         return s.strip("_")
 
     @staticmethod
-    def convert_to_numeric(val) -> pd.Series:
+    def convert_col_to_numeric(col: str) -> pd.Series:
         """Convert values to numeric."""
-        if isinstance(val, str) and "%" in val:
-            return pd.to_numeric(val.rstrip("%")) / 100
-        return pd.to_numeric(val)
+        if "%" in col:
+            return pd.to_numeric(col.rstrip("%")) / 100
+        return pd.to_numeric(col)
 
 
 def main():
-    fbref = FbrefScoutingReports()
-    fbref.run()
+    fbref_scouting_reports = FBrefScoutingReports()
+    fbref_scouting_reports.run()
 
 
 if __name__ == "__main__":
