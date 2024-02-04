@@ -8,8 +8,8 @@ from scrapy.spiders import CrawlSpider, Rule
 from app.scraper.items import ScrappedItem
 
 
-class FBRefBRA1(CrawlSpider):
-    name = "FBRefBRA1"
+class FBrefBRA1(CrawlSpider):
+    name = "FBrefBRA1"
     allowed_domains = ["fbref.com"]
     start_urls = ["https://fbref.com/en/comps/24/Serie-A-Stats"]
     custom_settings = {
@@ -17,7 +17,7 @@ class FBRefBRA1(CrawlSpider):
         "CONCURRENT_REQUESTS": 1,
     }
 
-    le_clubs = LinkExtractor(
+    le_teams = LinkExtractor(
         allow=r"/squads/\w+/[\w\-]+$",
         restrict_xpaths="//table[./caption[contains(text(),'Regular season Table')]]//td[@data-stat='team']",
     )
@@ -29,7 +29,7 @@ class FBRefBRA1(CrawlSpider):
     )
 
     rules = (
-        Rule(le_clubs, follow=True, callback="_process_results", cb_kwargs={"path": "clubs"}),
+        Rule(le_teams, follow=True, callback="_process_results", cb_kwargs={"path": "teams"}),
         Rule(le_matches, follow=False, callback="_process_results", cb_kwargs={"path": "matches"}),
         Rule(le_players, follow=True, callback="_process_results", cb_kwargs={"path": "players"}),
         Rule(
