@@ -7,6 +7,29 @@ from sqlalchemy import REAL, Column, Date, ForeignKey, Integer, String
 from app.models.base import Base, BaseMixin
 
 
+class FBrefTeams(Base, BaseMixin):
+    __tablename__ = "teams"
+    __table_args__ = ({"schema": "fbref"},)
+
+    id: str = Column(String, primary_key=True)
+    name: str = Column(String)
+    country: str = Column(String)
+    league_name: str = Column(String)
+    league_url: str = Column(String)
+
+    @staticmethod
+    def trg_refresh_updated_at():
+        return PGTrigger(
+            schema="fbref",
+            signature="trg_teams_refresh_updated_at",
+            on_entity="fbref.teams",
+            definition="""
+            BEFORE UPDATE ON fbref.teams
+            FOR EACH ROW EXECUTE FUNCTION public.refresh_updated_at()
+            """,
+        )
+
+
 @dataclass
 class FBrefPlayers(Base, BaseMixin):
     __tablename__ = "players"
@@ -17,8 +40,7 @@ class FBrefPlayers(Base, BaseMixin):
     full_name: str = Column(String)
     dob: date = Column(Date)
     country: str = Column(String)
-    club_url: str = Column(String)
-    club_name: str = Column(String)
+    team_id: str = Column(String, ForeignKey("fbref.teams.id"))
     position: str = Column(String)
 
     @staticmethod

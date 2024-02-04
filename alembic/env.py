@@ -10,6 +10,7 @@ register_entities([
     base.fun_refresh_updated_at,
     fbref.FBrefPlayers.trg_refresh_updated_at(),
     fbref.FBrefScoutingReports.trg_refresh_updated_at(),
+    fbref.FBrefTeams.trg_refresh_updated_at(),
 ])
 
 # this is the Alembic Config object, which provides

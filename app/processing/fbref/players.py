@@ -35,11 +35,12 @@ class FBrefPlayers:
             country = soup.find("div", {"id": "meta"}).find("a", {"href": re.compile("/country/")})
             country = country.get_text() if country else None
 
-            club_name = soup.find("div", {"id": "meta"}).find("a", {"href": re.compile("/squads/")})
-            club_name = club_name.get_text() if club_name else None
-
-            club_url = soup.find("div", {"id": "meta"}).find("a", {"href": re.compile("/squads/")})
-            club_url = club_url.get("href") if club_url else None
+            team_url = soup.find("div", {"id": "meta"}).find("a", {"href": re.compile("/squads/")})
+            team_id = (
+                re.search(r"/squads/(?P<club_id>.+)/", team_url.get("href")).groupdict().get("club_id")
+                if team_url
+                else None
+            )
 
             position = soup.find("div", {"id": "meta"}).find("strong", string=re.compile("Position"))
             position = position.next_sibling.text.replace("\xa0", "").replace("▪", "").strip() if position else None
@@ -50,8 +51,7 @@ class FBrefPlayers:
                 full_name=full_name,
                 dob=dob,
                 country=country,
-                club_name=club_name,
-                club_url=club_url,
+                team_id=team_id,
                 position=position,
             )
 
