@@ -35,6 +35,9 @@ fun_refresh_updated_at = PGFunction(
 
 @dataclass
 class BaseMixin:
+    __tablename__: str = ""
+    __table_args__: tuple = ({"schema": ""},)
+
     created_at: datetime = Column(
         DateTime(timezone=True),
         nullable=False,
