@@ -39,7 +39,7 @@ class FBrefTeams:
                 league_url=league_url,
             )
 
-            self.db.load_dict(data=team.to_dict(), table="teams", schema="fbref")
+            self.db.load_from_model(team)
 
 
 def main():

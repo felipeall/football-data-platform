@@ -55,7 +55,7 @@ class FBrefPlayers:
                 position=position,
             )
 
-            self.db.load_dict(data=player.to_dict(), table="players", schema="fbref")
+            self.db.load_from_model(player)
 
 
 def main():
