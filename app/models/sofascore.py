@@ -47,6 +47,8 @@ class SofascorePlayers(Base, BaseMixin):
     height: str = Column(Integer)
     preferred_foot: str = Column(String)
     retired: bool = Column(Boolean)
+    country_code: str = Column(String)
+    country_name: str = Column(String)
     dob: date = Column(Date)
 
     @staticmethod

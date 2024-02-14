@@ -1,4 +1,4 @@
-"""Create model SofascoreTeams
+"""Create model SofascorePlayers
 
 Revision ID: 51fdb7bc49dd
 Revises: e4b04377e715
@@ -31,6 +31,8 @@ def upgrade() -> None:
         sa.Column("height", sa.Integer(), nullable=True),
         sa.Column("preferred_foot", sa.String(), nullable=True),
         sa.Column("retired", sa.Boolean(), nullable=True),
+        sa.Column("country_code", sa.String(), nullable=True),
+        sa.Column("country_name", sa.String(), nullable=True),
         sa.Column("dob", sa.Date(), nullable=True),
         sa.Column(
             "created_at",

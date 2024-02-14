@@ -33,6 +33,8 @@ class SofascorePlayers:
                 height=data_player.get("height"),
                 preferred_foot=data_player.get("preferredFoot"),
                 retired=data_player.get("retired"),
+                country_code=data_player.get("country").get("alpha2"),
+                country_name=data_player.get("country").get("name"),
                 dob=(
                     date.fromtimestamp(data_player.get("dateOfBirthTimestamp"))
                     if data_player.get("dateOfBirthTimestamp")

@@ -8,11 +8,11 @@ sofascore_players = players.SofascorePlayers()
 sofascore_matches_events = matches_events.SofascoreMatchesEvents()
 
 
-logger.info("Running Sofascore Matches")
-sofascore_matches.run()
-
 logger.info("Running Sofascore Teams")
 sofascore_teams.run()
+
+logger.info("Running Sofascore Matches")
+sofascore_matches.run()
 
 logger.info("Running Sofascore Players")
 sofascore_players.run()
