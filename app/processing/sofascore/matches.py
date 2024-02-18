@@ -1,6 +1,6 @@
 import json
 from dataclasses import dataclass
-from datetime import date
+from datetime import datetime, timezone
 
 from tqdm import tqdm
 
@@ -27,7 +27,7 @@ class SofascoreMatches:
 
                 match = sofascore.SofascoreMatches(
                     id=event.get("id"),
-                    date=date.fromtimestamp(event.get("startTimestamp")),
+                    date=datetime.fromtimestamp(event.get("startTimestamp"), tz=timezone.utc),
                     tournament_id=event.get("tournament").get("id"),
                     season_id=event.get("season").get("id"),
                     round=event.get("roundInfo").get("round"),

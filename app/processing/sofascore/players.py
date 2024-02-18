@@ -1,6 +1,6 @@
 import json
 from dataclasses import dataclass
-from datetime import date
+from datetime import datetime, timezone
 
 from tqdm import tqdm
 
@@ -36,7 +36,7 @@ class SofascorePlayers:
                 country_code=data_player.get("country").get("alpha2"),
                 country_name=data_player.get("country").get("name"),
                 dob=(
-                    date.fromtimestamp(data_player.get("dateOfBirthTimestamp"))
+                    datetime.fromtimestamp(data_player.get("dateOfBirthTimestamp"), tz=timezone.utc)
                     if data_player.get("dateOfBirthTimestamp")
                     else None
                 ),
