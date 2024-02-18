@@ -1,6 +1,8 @@
 import re
 from dataclasses import dataclass
 
+import country_converter as cc
+import countrynames as cn
 import dateparser
 from bs4 import BeautifulSoup
 from tqdm import tqdm
@@ -32,8 +34,13 @@ class FBrefPlayers:
             dob = soup.find("div", {"id": "meta"}).find("a", {"href": re.compile("birthdays")})
             dob = dateparser.parse(dob.parent.get_text().strip()).date() if dob else None
 
-            country = soup.find("div", {"id": "meta"}).find("a", {"href": re.compile("/country/")})
-            country = country.get_text() if country else None
+            national_team = soup.find("div", {"id": "meta"}).find("a", {"href": re.compile("/country/")})
+            national_team = national_team.get_text() if national_team else None
+
+            born_in = soup.find("div", {"id": "meta"}).find("span", string=re.compile("in "))
+            born_in = re.sub(r"^in\s", "", born_in.get_text().strip()) if born_in else None
+
+            country_name = national_team or born_in
 
             team_url = soup.find("div", {"id": "meta"}).find("a", {"href": re.compile("/squads/")})
             team_id = (
@@ -50,7 +57,10 @@ class FBrefPlayers:
                 name=name,
                 full_name=full_name,
                 dob=dob,
-                country=country,
+                country_code=(
+                    cn.to_code(country_name) or cc.convert(names=country_name, to="ISO2") if country_name else None
+                ),
+                country_name=country_name,
                 team_id=team_id,
                 position=position,
             )

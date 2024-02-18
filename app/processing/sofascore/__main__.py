@@ -1,4 +1,5 @@
 from loguru import logger
+
 from app.processing.sofascore import matches, matches_events, players, teams
 
 logger.info("Started Sofascore processing")

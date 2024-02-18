@@ -1,5 +1,6 @@
-from app.processing.fbref import players, scouting_reports, teams
 from loguru import logger
+
+from app.processing.fbref import players, scouting_reports, teams
 
 logger.info("Started FBref processing")
 fbref_players = players.FBrefPlayers()

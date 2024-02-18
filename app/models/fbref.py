@@ -39,7 +39,8 @@ class FBrefPlayers(Base, BaseMixin):
     name: str = Column(String)
     full_name: str = Column(String)
     dob: date = Column(Date)
-    country: str = Column(String)
+    country_name: str = Column(String)
+    country_code: str = Column(String)
     team_id: str = Column(String, ForeignKey("fbref.teams.id"))
     position: str = Column(String)
 
