@@ -63,6 +63,7 @@ def upgrade() -> None:
         sa.Column("passes_completed_long", sa.REAL(), nullable=True),
         sa.Column("passes_attempted_long", sa.REAL(), nullable=True),
         sa.Column("pass_completion_pct_long", sa.REAL(), nullable=True),
+        sa.Column("xag_exp_assisted_goals", sa.REAL(), nullable=True),
         sa.Column("xa_expected_assists", sa.REAL(), nullable=True),
         sa.Column("key_passes", sa.REAL(), nullable=True),
         sa.Column("passes_into_final_third", sa.REAL(), nullable=True),

@@ -103,6 +103,7 @@ class FBrefScoutingReports(Base, BaseMixin):
     passes_completed_long: float = Column(REAL)
     passes_attempted_long: float = Column(REAL)
     pass_completion_pct_long: float = Column(REAL)
+    xag_exp_assisted_goals: float = Column(REAL)
     xa_expected_assists: float = Column(REAL)
     key_passes: float = Column(REAL)
     passes_into_final_third: float = Column(REAL)
