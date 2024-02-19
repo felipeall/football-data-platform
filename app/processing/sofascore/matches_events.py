@@ -31,7 +31,7 @@ class SofascoreMatchesEvents:
                     player_id=player.get("player").get("id"),
                     scrapped_at=datetime.fromtimestamp(data.get("scrapped_at"), tz=timezone.utc),
                 )
-                statistics = player.get("statistics")
+                statistics = player.get("statistics", {})
                 statistics = {self.camel_to_snake(k): v for k, v in self.flatten(statistics).items()}
                 match_events = sofascore.SofascoreMatchesEvents(**metadata, **statistics)
 
