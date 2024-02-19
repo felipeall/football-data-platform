@@ -39,7 +39,7 @@ class FBrefTeams:
                 league_url=league_url,
             )
 
-            self.db.load_from_model(team)
+            self.db.upsert_from_model(team)
 
 
 def main():

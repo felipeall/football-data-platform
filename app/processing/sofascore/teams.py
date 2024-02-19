@@ -32,7 +32,7 @@ class SofascoreTeams:
                 league_name=data_team["primaryUniqueTournament"]["name"],
             )
 
-            self.db.load_from_model(team)
+            self.db.upsert_from_model(team)
 
 
 def main():

@@ -33,7 +33,7 @@ class SofascoreMatchesEvents:
                 statistics = {self.camel_to_snake(k): v for k, v in self.flatten(statistics).items()}
                 match_events = sofascore.SofascoreMatchesEvents(**metadata, **statistics)
 
-                self.db.load_from_model(match_events)
+                self.db.upsert_from_model(match_events)
 
     @staticmethod
     def camel_to_snake(name):

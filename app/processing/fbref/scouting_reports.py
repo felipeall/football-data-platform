@@ -41,7 +41,7 @@ class FBrefScoutingReports:
             data = self.aws.read_from_json(file_path=file)
             scouting_report = self.process_file(data)
             if scouting_report:
-                self.db.load_from_model(scouting_report)
+                self.db.upsert_from_model(scouting_report)
 
     def process_file(self, data: dict) -> Optional[fbref.FBrefScoutingReports]:
         """Process a file."""

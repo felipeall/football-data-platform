@@ -42,7 +42,7 @@ class SofascorePlayers:
                 ),
             )
 
-            self.db.load_from_model(player)
+            self.db.upsert_from_model(player)
 
 
 def main():

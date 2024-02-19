@@ -65,7 +65,7 @@ class FBrefPlayers:
                 position=position,
             )
 
-            self.db.load_from_model(player)
+            self.db.upsert_from_model(player)
 
 
 def main():

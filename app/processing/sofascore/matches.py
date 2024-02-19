@@ -38,7 +38,7 @@ class SofascoreMatches:
                     away_score=event.get("awayScore").get("current"),
                 )
 
-                self.db.load_from_model(match)
+                self.db.upsert_from_model(match)
 
 
 def main():
