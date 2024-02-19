@@ -1,4 +1,4 @@
-"""Register trg_teams_refresh_updated_at
+"""Register trg_scouting_reports_refresh_updated_at
 
 Revision ID: 5c065a80315e
 Revises: 03823f0417c0
@@ -20,22 +20,22 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    fbref_teams_trg_teams_refresh_updated_at = PGTrigger(
+    fbref_scouting_reports_trg_scouting_reports_refresh_updated_at = PGTrigger(
         schema="fbref",
-        signature="trg_teams_refresh_updated_at",
-        on_entity="fbref.teams",
+        signature="trg_scouting_reports_refresh_updated_at",
+        on_entity="fbref.scouting_reports",
         is_constraint=False,
-        definition="BEFORE UPDATE ON fbref.teams FOR EACH ROW EXECUTE FUNCTION public.refresh_updated_at()",
+        definition="BEFORE UPDATE ON fbref.scouting_reports FOR EACH ROW EXECUTE FUNCTION public.refresh_updated_at()",
     )
-    op.create_entity(fbref_teams_trg_teams_refresh_updated_at)
+    op.create_entity(fbref_scouting_reports_trg_scouting_reports_refresh_updated_at)
 
 
 def downgrade() -> None:
-    fbref_teams_trg_teams_refresh_updated_at = PGTrigger(
+    fbref_scouting_reports_trg_scouting_reports_refresh_updated_at = PGTrigger(
         schema="fbref",
-        signature="trg_teams_refresh_updated_at",
-        on_entity="fbref.teams",
+        signature="trg_scouting_reports_refresh_updated_at",
+        on_entity="fbref.scouting_reports",
         is_constraint=False,
-        definition="BEFORE UPDATE ON fbref.teams FOR EACH ROW EXECUTE FUNCTION public.refresh_updated_at()",
+        definition="BEFORE UPDATE ON fbref.scouting_reports FOR EACH ROW EXECUTE FUNCTION public.refresh_updated_at()",
     )
-    op.drop_entity(fbref_teams_trg_teams_refresh_updated_at)
+    op.drop_entity(fbref_scouting_reports_trg_scouting_reports_refresh_updated_at)

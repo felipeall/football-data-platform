@@ -1,8 +1,8 @@
 """Create model FBrefScoutingReports
 
-Revision ID: b58732f1bef8
-Revises: 68f8434755eb
-Create Date: 2024-01-30 22:19:37.940075
+Revision ID: 03823f0417c0
+Revises: e55a606b0a8c
+Create Date: 2024-02-03 16:08:16.877868
 
 """
 
@@ -13,8 +13,8 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "b58732f1bef8"
-down_revision: Union[str, None] = "68f8434755eb"
+revision: str = "03823f0417c0"
+down_revision: Union[str, None] = "e55a606b0a8c"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

@@ -1,8 +1,8 @@
 """Create model FBrefPlayers
 
-Revision ID: 9cb7b217e4af
-Revises: cc8f04377ee9
-Create Date: 2024-01-30 22:17:57.766854
+Revision ID: b58732f1bef8
+Revises: 68f8434755eb
+Create Date: 2024-01-30 22:19:37.940075
 
 """
 
@@ -13,8 +13,8 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "9cb7b217e4af"
-down_revision: Union[str, None] = "cc8f04377ee9"
+revision: str = "b58732f1bef8"
+down_revision: Union[str, None] = "68f8434755eb"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -25,6 +25,7 @@ def upgrade() -> None:
         sa.Column("id", sa.String(), nullable=False),
         sa.Column("name", sa.String(), nullable=True),
         sa.Column("full_name", sa.String(), nullable=True),
+        sa.Column("team_id", sa.String(), nullable=True),
         sa.Column("dob", sa.Date(), nullable=True),
         sa.Column("country_code", sa.String(), nullable=True),
         sa.Column("country_name", sa.String(), nullable=True),
@@ -44,6 +45,7 @@ def upgrade() -> None:
             server_default=sa.text("CURRENT_TIMESTAMP"),
             nullable=False,
         ),
+        sa.ForeignKeyConstraint(["team_id"], ["fbref.teams.id"], name=op.f("fk_players_team_id_teams")),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_players")),
         schema="fbref",
     )
