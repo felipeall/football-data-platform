@@ -26,6 +26,7 @@ def upgrade() -> None:
         sa.Column("id", postgresql.UUID(as_uuid=True), server_default=sa.text("gen_random_uuid()"), nullable=False),
         sa.Column("match_id", sa.String(), nullable=False),
         sa.Column("player_id", sa.String(), nullable=False),
+        sa.Column("has_statistics", sa.Boolean(), nullable=False),
         sa.Column("accurate_cross", sa.Integer(), nullable=True),
         sa.Column("accurate_keeper_sweeper", sa.Integer(), nullable=True),
         sa.Column("accurate_long_balls", sa.Integer(), nullable=True),

@@ -79,6 +79,7 @@ class SofascoreMatches(Base, BaseMixin):
     away_team_id: str = Column(String, ForeignKey("sofascore.teams.id"))
     home_score: int = Column(Integer)
     away_score: int = Column(Integer)
+    has_players_statistics: bool = Column(Boolean, nullable=False)
 
     @staticmethod
     def trg_refresh_updated_at():
@@ -103,6 +104,7 @@ class SofascoreMatchesEvents(Base, IDMixin, BaseMixin):
 
     match_id: str = Column(String, ForeignKey("sofascore.matches.id"), nullable=False)
     player_id: str = Column(String, ForeignKey("sofascore.players.id"), nullable=False)
+    has_statistics: bool = Column(Boolean, nullable=False)
     accurate_cross: int = Column(Integer)
     accurate_keeper_sweeper: int = Column(Integer)
     accurate_long_balls: int = Column(Integer)

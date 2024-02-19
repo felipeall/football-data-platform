@@ -36,6 +36,7 @@ class SofascoreMatches:
                     away_team_id=event.get("awayTeam").get("id"),
                     home_score=event.get("homeScore").get("current"),
                     away_score=event.get("awayScore").get("current"),
+                    has_players_statistics=event.get("hasEventPlayerStatistics"),
                     scrapped_at=datetime.fromtimestamp(data.get("scrapped_at"), tz=timezone.utc),
                 )
 

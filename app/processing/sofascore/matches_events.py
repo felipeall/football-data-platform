@@ -26,13 +26,14 @@ class SofascoreMatchesEvents:
 
             for player in players:
 
+                statistics = player.get("statistics", {})
+                statistics = {self.camel_to_snake(k): v for k, v in self.flatten(statistics).items()}
                 metadata = dict(
                     match_id=data.get("id"),
                     player_id=player.get("player").get("id"),
+                    has_statistics=bool(statistics),
                     scrapped_at=datetime.fromtimestamp(data.get("scrapped_at"), tz=timezone.utc),
                 )
-                statistics = player.get("statistics", {})
-                statistics = {self.camel_to_snake(k): v for k, v in self.flatten(statistics).items()}
                 match_events = sofascore.SofascoreMatchesEvents(**metadata, **statistics)
 
                 self.db.upsert_from_model(match_events)

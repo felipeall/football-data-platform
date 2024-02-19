@@ -32,6 +32,7 @@ def upgrade() -> None:
         sa.Column("away_team_id", sa.String(), nullable=True),
         sa.Column("home_score", sa.Integer(), nullable=True),
         sa.Column("away_score", sa.Integer(), nullable=True),
+        sa.Column("has_players_statistics", sa.Boolean(), nullable=False),
         sa.Column("scrapped_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column(
             "created_at",
