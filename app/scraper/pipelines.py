@@ -1,4 +1,5 @@
 import re
+from datetime import datetime, timezone
 
 import tldextract
 from itemadapter import ItemAdapter
@@ -37,6 +38,7 @@ class ParseItemPipeline:
         item["source"] = self.source
         item["file_name"] = self.__parse_file_name(url=item.get("url"))
         item["id"] = self.__extract_id(file_name=item["file_name"], path=item["path"])
+        item["scrapped_at"] = datetime.now(tz=timezone.utc).timestamp()
 
         return item
 

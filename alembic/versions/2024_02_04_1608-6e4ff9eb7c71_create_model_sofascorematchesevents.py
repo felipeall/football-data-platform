@@ -83,6 +83,7 @@ def upgrade() -> None:
         sa.Column("touches", sa.Integer(), nullable=True),
         sa.Column("was_fouled", sa.Integer(), nullable=True),
         sa.Column("won_contest", sa.Integer(), nullable=True),
+        sa.Column("scrapped_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),

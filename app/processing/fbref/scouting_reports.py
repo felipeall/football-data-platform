@@ -1,6 +1,7 @@
 import io
 import re
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from typing import Optional
 
 import pandas as pd
@@ -60,6 +61,9 @@ class FBrefScoutingReports:
             .rename(columns=self.normalize_col_name)
             .assign(player_id=data["id"])
             .assign(minutes_played=self.extract_minutes_played(soup=soup))
+            .assign(
+                scrapped_at=datetime.fromtimestamp(data["scrapped_at"], tz=timezone.utc),
+            )
         )
 
         return fbref.FBrefScoutingReports(**df.to_dict("records")[0])

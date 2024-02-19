@@ -40,6 +40,7 @@ class SofascorePlayers:
                     if data_player.get("dateOfBirthTimestamp")
                     else None
                 ),
+                scrapped_at=datetime.fromtimestamp(data["scrapped_at"], tz=timezone.utc),
             )
 
             self.db.upsert_from_model(player)

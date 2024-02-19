@@ -1,5 +1,6 @@
 import json
 from dataclasses import dataclass
+from datetime import datetime, timezone
 
 from tqdm import tqdm
 
@@ -28,6 +29,7 @@ class SofascoreMatchesEvents:
                 metadata = dict(
                     match_id=data.get("id"),
                     player_id=player.get("player").get("id"),
+                    scrapped_at=datetime.fromtimestamp(data.get("scrapped_at"), tz=timezone.utc),
                 )
                 statistics = player.get("statistics")
                 statistics = {self.camel_to_snake(k): v for k, v in self.flatten(statistics).items()}

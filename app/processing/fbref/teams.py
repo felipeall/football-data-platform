@@ -1,5 +1,6 @@
 import re
 from dataclasses import dataclass
+from datetime import datetime, timezone
 
 from bs4 import BeautifulSoup
 from tqdm import tqdm
@@ -37,6 +38,7 @@ class FBrefTeams:
                 country=country,
                 league_name=league_name,
                 league_url=league_url,
+                scrapped_at=datetime.fromtimestamp(data["scrapped_at"], tz=timezone.utc),
             )
 
             self.db.upsert_from_model(team)

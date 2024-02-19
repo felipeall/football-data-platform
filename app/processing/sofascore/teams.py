@@ -1,5 +1,6 @@
 import json
 from dataclasses import dataclass
+from datetime import datetime, timezone
 
 from tqdm import tqdm
 
@@ -30,6 +31,7 @@ class SofascoreTeams:
                 country_code=data_team["country"]["alpha2"],
                 league_id=data_team["primaryUniqueTournament"]["id"],
                 league_name=data_team["primaryUniqueTournament"]["name"],
+                scrapped_at=datetime.fromtimestamp(data.get("scrapped_at"), tz=timezone.utc),
             )
 
             self.db.upsert_from_model(team)

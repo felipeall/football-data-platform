@@ -26,7 +26,9 @@ class Database:
         """Build an upsert statement for a given table."""
         insert_stmt = insert(sql_table).values(values_to_insert)
         update_stmt = {
-            c.name: c for c in insert_stmt.excluded if not c.primary_key and c.name not in ["created_at", "updated_at"]
+            c.name: c
+            for c in insert_stmt.excluded
+            if not c.primary_key and c.name not in ["scrapped_at", "created_at", "updated_at"]
         }
         return insert_stmt.on_conflict_do_update(
             constraint=self.__get_constraint_name(sql_table),

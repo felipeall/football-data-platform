@@ -29,6 +29,7 @@ def upgrade() -> None:
         sa.Column("country_code", sa.String(), nullable=True),
         sa.Column("league_id", sa.String(), nullable=True),
         sa.Column("league_name", sa.String(), nullable=True),
+        sa.Column("scrapped_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),

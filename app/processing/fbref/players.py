@@ -1,5 +1,6 @@
 import re
 from dataclasses import dataclass
+from datetime import datetime, timezone
 
 import country_converter as cc
 import countrynames as cn
@@ -63,6 +64,7 @@ class FBrefPlayers:
                 country_name=country_name,
                 team_id=team_id,
                 position=position,
+                scrapped_at=datetime.fromtimestamp(data["scrapped_at"], tz=timezone.utc),
             )
 
             self.db.upsert_from_model(player)

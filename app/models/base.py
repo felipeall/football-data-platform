@@ -38,6 +38,10 @@ class BaseMixin:
     __tablename__: str = ""
     __table_args__: tuple = ({"schema": ""},)
 
+    scrapped_at: datetime = Column(
+        DateTime(timezone=True),
+        nullable=False,
+    )
     created_at: datetime = Column(
         DateTime(timezone=True),
         nullable=False,
