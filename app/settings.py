@@ -40,5 +40,11 @@ class Settings(BaseSettings):
     AWS_DEFAULT_REGION: str = "us-east-1"
     AWS_ENDPOINT_URL: Optional[str] = "http://localhost:9000"
 
+    # Superset
+    SUPERSET_ADMIN_USER: str = ""
+    SUPERSET_ADMIN_PASSWORD: str = ""
+    SUPERSET_ADMIN_EMAIL: str = ""
+    SUPERSET_SECRET_KEY: str = ""
+
 
 settings: Settings = Settings()

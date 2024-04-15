@@ -35,6 +35,15 @@ services:
       exit 0;
       "
 
+  superset:
+    container_name: superset
+    build:
+      context: ./superset
+    env_file:
+      - .env
+    ports:
+      - '8088:8088'
+
 volumes:
   football-db-data:
   minio_storage:
