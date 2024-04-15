@@ -56,41 +56,33 @@ docker compose up -d --build
 alembic upgrade head
 ```
 
-6. Run the desired spider:
+---
+
+### Scrapping
+
+Run the desired spider:
 ```bash
 scrapy crawl <spider_name>
 ```
 
----
-
 Currently, the available spiders are:
 
-`FBRefBRA1` 
-Fetches data from the 
-[Brazilian Serie A 2023](https://fbref.com/en/comps/24/Serie-A-Stats) 
-league on FBRef
+- FBrefBRA1
+- FBrefEPL
+- FBrefUCL
+- SofascoreBRA12023
+- SofascoreEPL2023
+- SofascoreLaLiga2023
+- SofascoreUCL2023
 
-`FBRefGRE` 
-Fetches data from 
-[Grêmio](https://fbref.com/en/squads/d5ae3703/Gremio-Stats) 
-team on FBRef
+---
 
-`SofascoreBRA1` 
-Fetches data from the 
-[Brazilian Serie A 2023](https://www.sofascore.com/tournament/football/brazil/brasileiro-serie-a/325#48982) 
-league on Sofascore
+### Processing
 
-`SofascoreGRE` 
-Fetches data from 
-[Grêmio](https://www.sofascore.com/team/football/gremio/5926) 
-team on Sofascore
+```bash
+python app/processing/sofascore
+```
 
-`TransfermarktBRA1` 
-Fetches data from the 
-[Brazilian Serie A 2023](https://www.transfermarkt.com/campeonato-brasileiro-serie-a/startseite/wettbewerb/BRA1) 
-league on Transfermarkt
-
-`TransfermarktGRE` 
-Fetches data from 
-[Grêmio](https://www.transfermarkt.com/gremio-porto-alegre/startseite/verein/210) 
-team on Transfermarkt
+```bash
+python app/processing/fbref
+```
