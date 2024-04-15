@@ -1,13 +1,16 @@
 import json
+import logging
 
 from scrapy import Request, Spider
 from scrapy.http import HtmlResponse
 
 from app.scraper.items import ScrappedItem
 
+log = logging.getLogger(__name__)
 
-class SofascoreLaLiga2023(Spider):
-    name = "SofascoreLaLiga2023"
+
+class Sofascore(Spider):
+    name = "sofascore"
     allowed_domains = ["api.sofascore.com"]
     start_urls = [
         "https://api.sofascore.com/api/v1/unique-tournament/{tournament_id}/season/{season_id}/events/last/{page_id}",
@@ -16,8 +19,17 @@ class SofascoreLaLiga2023(Spider):
         "DEPTH_LIMIT": 0,
     }
 
-    TOURNAMENT_ID = "8"
-    SEASON_ID = "52376"
+    TOURNAMENT_ID = ""
+    SEASON_ID = ""
+
+    def __init__(self, *args, **kwargs):
+        super(Sofascore, self).__init__(*args, **kwargs)
+        if not self.TOURNAMENT_ID:
+            log.error("TOURNAMENT_ID is required")
+            raise ValueError("TOURNAMENT_ID is required")
+        if not self.SEASON_ID:
+            log.error("SEASON_ID is required")
+            raise ValueError("SEASON_ID is required")
 
     def start_requests(self):
         page_id = 0

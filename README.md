@@ -60,20 +60,34 @@ alembic upgrade head
 
 ### Scrapping
 
-Run the desired spider:
+#### Sofascore
+
+```bash
+scrapy crawl sofascore -a TOURNAMENT_ID=<tournament_id> -a SEASON_ID=<season_id>
+```
+
+Where `<tournament_id>` and `<season_id>` are the tournament and season identifiers, respectively.
+
+They can be found in the URL of the tournament page on Sofascore.
+
+Example: LaLiga 23/24
+
+```bash
+scrapy crawl sofascore -a TOURNAMENT_ID=8 -a SEASON_ID=52376
+```
+
+#### FBRef
+
 ```bash
 scrapy crawl <spider_name>
 ```
 
-Currently, the available spiders are:
+Where `<spider_name>` is the name of the spider to be executed.
+The available spiders are:
 
 - FBrefBRA1
 - FBrefEPL
 - FBrefUCL
-- SofascoreBRA12023
-- SofascoreEPL2023
-- SofascoreLaLiga2023
-- SofascoreUCL2023
 
 ---
 
