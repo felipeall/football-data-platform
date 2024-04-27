@@ -153,6 +153,7 @@ class SofascoreMatchesEvents(Base, IDMixin, BaseMixin):
 
     match_id: str = Column(String, ForeignKey("sofascore.matches.id"), nullable=False)
     player_id: str = Column(String, ForeignKey("sofascore.players.id"), nullable=False)
+    team_id: str = Column(String, ForeignKey("sofascore.teams.id"), nullable=False)
     has_statistics: bool = Column(Boolean, nullable=False)
     accurate_cross: int = Column(Integer)
     accurate_keeper_sweeper: int = Column(Integer)

@@ -35,6 +35,7 @@ class ParseItemPipeline:
         self.url_regex = self.REGEX.get(self.source)
 
     def process_item(self, item: Item, spider):
+        item["metadata"] = item.get("metadata", {})
         item["source"] = self.source
         item["file_name"] = self.__parse_file_name(url=item.get("url"))
         item["id"] = self.__extract_id(file_name=item["file_name"], path=item["path"])

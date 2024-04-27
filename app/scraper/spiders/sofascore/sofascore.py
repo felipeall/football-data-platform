@@ -1,5 +1,6 @@
 import json
 import logging
+from typing import Optional
 
 from scrapy import Request, Spider
 from scrapy.http import HtmlResponse
@@ -42,11 +43,12 @@ class Sofascore(Spider):
                 cb_kwargs={"path": "matches"},
             )
 
-    def _process_results(self, response: HtmlResponse, path: str):
+    def _process_results(self, response: HtmlResponse, path: str, metadata: Optional[dict] = None):
         yield ScrappedItem(
             url=response.url,
             data=response.text,
             path=path,
+            metadata=metadata,
         )
 
         if path == "matches":
@@ -60,9 +62,16 @@ class Sofascore(Spider):
                 yield Request(team_url, callback=self._process_results, cb_kwargs={"path": "teams"})
 
             # Process Matches
-            for match_id in [d["id"] for d in data["events"]]:
-                match_url = f"https://api.sofascore.com/api/v1/event/{match_id}/lineups"
-                yield Request(match_url, callback=self._process_results, cb_kwargs={"path": "matches_events"})
+            for event in data["events"]:
+                match_url = f"https://api.sofascore.com/api/v1/event/{event['id']}/lineups"
+                yield Request(
+                    match_url,
+                    callback=self._process_results,
+                    cb_kwargs={
+                        "path": "matches_events",
+                        "metadata": {"home_team_id": event["homeTeam"]["id"], "away_team_id": event["awayTeam"]["id"]},
+                    },
+                )
 
             # Process Next Page
             if data.get("hasNextPage"):

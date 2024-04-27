@@ -13,20 +13,25 @@ class SofascoreMatchesEvents(BaseProcessing):
     def run(self):
         for data in self.files_data:
             matches_events_data = json.loads(data["data"])
-            players = matches_events_data["home"]["players"] + matches_events_data["away"]["players"]
+            teams_players = {
+                data.get("metadata").get("home_team_id"): matches_events_data["home"]["players"],
+                data.get("metadata").get("away_team_id"): matches_events_data["away"]["players"],
+            }
 
-            for player in players:
-                statistics = player.get("statistics", {})
-                statistics = {self.camel_to_snake(k): v for k, v in self.flatten(statistics).items()}
-                metadata = dict(
-                    match_id=data.get("id"),
-                    player_id=player.get("player").get("id"),
-                    has_statistics=bool(statistics),
-                    scrapped_at=datetime.fromtimestamp(data.get("scrapped_at"), tz=timezone.utc),
-                )
-                match_events = sofascore.SofascoreMatchesEvents(**metadata, **statistics)
+            for team_id, team_players in teams_players.items():
+                for player in team_players:
+                    statistics = player.get("statistics", {})
+                    statistics = {self.camel_to_snake(k): v for k, v in self.flatten(statistics).items()}
+                    metadata = dict(
+                        match_id=data.get("id"),
+                        player_id=player.get("player").get("id"),
+                        team_id=team_id,
+                        has_statistics=bool(statistics),
+                        scrapped_at=datetime.fromtimestamp(data.get("scrapped_at"), tz=timezone.utc),
+                    )
+                    match_events = sofascore.SofascoreMatchesEvents(**metadata, **statistics)
 
-                self.db.upsert_from_model(match_events)
+                    self.db.upsert_from_model(match_events)
 
     @staticmethod
     def camel_to_snake(name):
