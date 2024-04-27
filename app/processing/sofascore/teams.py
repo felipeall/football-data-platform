@@ -2,25 +2,16 @@ import json
 from dataclasses import dataclass
 from datetime import datetime, timezone
 
-from tqdm import tqdm
-
 from app.models import sofascore
-from app.services.aws import AWS
-from app.services.db import Database
+from app.processing.base import BaseProcessing
 
 
 @dataclass
-class SofascoreTeams:
-    aws: AWS = AWS()
-    db: Database = Database()
+class SofascoreTeams(BaseProcessing):
     files_path: str = "files/sofascore/teams"
 
     def run(self):
-        files = self.aws.list_files(self.files_path)
-
-        for file in (pbar := tqdm(files)):
-            pbar.set_description(file)
-            data = self.aws.read_from_json(file_path=file)
+        for data in self.files_data:
             data_team = json.loads(data["data"])["team"]
 
             team = sofascore.SofascoreTeams(

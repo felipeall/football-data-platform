@@ -6,11 +6,9 @@ from typing import Optional
 
 import pandas as pd
 from bs4 import BeautifulSoup
-from tqdm import tqdm
 
 from app.models import fbref
-from app.services.aws import AWS
-from app.services.db import Database
+from app.processing.base import BaseProcessing
 
 COLS_TO_DROP: list = [
     "Shooting",
@@ -25,21 +23,16 @@ COLS_TO_DROP: list = [
 
 
 @dataclass
-class FBrefScoutingReports:
+class FBrefScoutingReports(BaseProcessing):
     """Process the scouting reports from FBref."""
 
-    aws: AWS = AWS()
-    db: Database = Database()
     files_path: str = "files/fbref/scouting_reports"
     cols_to_drop: list = field(default_factory=lambda: COLS_TO_DROP)
 
     def run(self):
         """Run the processing."""
-        files = self.aws.list_files(self.files_path)
 
-        for file in (pbar := tqdm(files)):
-            pbar.set_description(file)
-            data = self.aws.read_from_json(file_path=file)
+        for data in self.files_data:
             scouting_report = self.process_file(data)
             if scouting_report:
                 self.db.upsert_from_model(scouting_report)

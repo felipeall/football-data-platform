@@ -6,25 +6,17 @@ import country_converter as cc
 import countrynames as cn
 import dateparser
 from bs4 import BeautifulSoup
-from tqdm import tqdm
 
 from app.models import fbref
-from app.services.aws import AWS
-from app.services.db import Database
+from app.processing.base import BaseProcessing
 
 
 @dataclass
-class FBrefPlayers:
-    aws: AWS = AWS()
-    db: Database = Database()
+class FBrefPlayers(BaseProcessing):
     files_path: str = "files/fbref/players"
 
     def run(self):
-        files = self.aws.list_files(self.files_path)
-
-        for file in (pbar := tqdm(files)):
-            pbar.set_description(file)
-            data = self.aws.read_from_json(file_path=file)
+        for data in self.files_data:
             soup = BeautifulSoup(data["data"], "lxml")
 
             name = soup.find("div", {"id": "meta"}).find("h1").get_text().strip()
