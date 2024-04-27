@@ -46,7 +46,7 @@ poetry install --no-root
 cp .env.example .env
 ```
 
-4. Build the Docker image and start a container:
+4. Build the Docker image and spin up the containers:
 ```bash
 docker compose up -d --build
 ```
@@ -67,7 +67,6 @@ scrapy crawl sofascore -a TOURNAMENT_ID=<tournament_id> -a SEASON_ID=<season_id>
 ```
 
 Where `<tournament_id>` and `<season_id>` are the tournament and season identifiers, respectively.
-
 They can be found in the URL of the tournament page on Sofascore.
 
 Example: LaLiga 23/24

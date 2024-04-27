@@ -53,9 +53,11 @@ class FBrefSofascore:
 
         features = (
             compare.compute(candidates, fbref_players, sofascore_players)
-            .loc[lambda x: x.sum(axis=1) >= self.SCORE_THRESHOLD, :]
+            .assign(score=lambda x: x.sum(axis=1))
+            .loc[lambda x: x["score"] >= self.SCORE_THRESHOLD, :]
             .reset_index()
             .rename(columns={"id_1": "fbref_id", "id_2": "sofascore_id"})
+            .sort_values("score", ascending=False)
             .drop_duplicates("fbref_id")
             .drop_duplicates("sofascore_id")
             .loc[:, ["fbref_id", "sofascore_id"]]

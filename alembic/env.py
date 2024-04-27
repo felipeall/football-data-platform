@@ -15,6 +15,8 @@ register_entities([
     sofascore.SofascorePlayers.trg_refresh_updated_at(),
     sofascore.SofascoreMatches.trg_refresh_updated_at(),
     sofascore.SofascoreMatchesEvents.trg_refresh_updated_at(),
+    sofascore.SofascoreSeasons.trg_refresh_updated_at(),
+    sofascore.SofascoreTournaments.trg_refresh_updated_at(),
 ])
 
 # this is the Alembic Config object, which provides

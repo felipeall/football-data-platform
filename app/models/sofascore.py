@@ -8,6 +8,55 @@ from app.models.base import Base, BaseMixin, IDMixin
 
 
 @dataclass
+class SofascoreSeasons(Base, BaseMixin):
+    __tablename__ = "seasons"
+    __table_args__ = ({"schema": "sofascore"},)
+
+    id: str = Column(String, primary_key=True)
+    name: str = Column(String)
+    tournament_id: str = Column(String)
+    year: int = Column(String)
+
+    @staticmethod
+    def trg_refresh_updated_at():
+        return PGTrigger(
+            schema="sofascore",
+            signature="trg_seasons_refresh_updated_at",
+            on_entity="sofascore.seasons",
+            definition="""
+                BEFORE UPDATE ON sofascore.seasons
+                FOR EACH ROW EXECUTE FUNCTION public.refresh_updated_at()
+                """,
+        )
+
+
+@dataclass
+class SofascoreTournaments(Base, BaseMixin):
+    __tablename__ = "tournaments"
+    __table_args__ = ({"schema": "sofascore"},)
+
+    id: str = Column(String, primary_key=True)
+    name: str = Column(String)
+    slug: str = Column(String)
+    country_name: str = Column(String)
+    country_code: str = Column(String)
+    has_performance_graph_feature: bool = Column(Boolean)
+    has_event_player_statistics: bool = Column(Boolean)
+
+    @staticmethod
+    def trg_refresh_updated_at():
+        return PGTrigger(
+            schema="sofascore",
+            signature="trg_tournaments_refresh_updated_at",
+            on_entity="sofascore.tournaments",
+            definition="""
+                BEFORE UPDATE ON sofascore.tournaments
+                FOR EACH ROW EXECUTE FUNCTION public.refresh_updated_at()
+                """,
+        )
+
+
+@dataclass
 class SofascoreTeams(Base, BaseMixin):
     __tablename__ = "teams"
     __table_args__ = ({"schema": "sofascore"},)
