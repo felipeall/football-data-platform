@@ -4,7 +4,7 @@ from alembic_utils.replaceable_entity import register_entities
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
-from app.models import base, fbref, sofascore
+from app.models import base, fbref, sofascore, transfermarkt
 
 register_entities([
     base.fun_refresh_updated_at,
@@ -17,6 +17,7 @@ register_entities([
     sofascore.SofascoreMatchesEvents.trg_refresh_updated_at(),
     sofascore.SofascoreSeasons.trg_refresh_updated_at(),
     sofascore.SofascoreTournaments.trg_refresh_updated_at(),
+    transfermarkt.TransfermarktMarketValue.trg_refresh_updated_at(),
 ])
 
 # this is the Alembic Config object, which provides

@@ -20,10 +20,10 @@ depends_on: Union[str, Sequence[str], None] = None
 def upgrade() -> None:
     op.execute("create schema fbref")
     op.execute("create schema sofascore")
-    op.execute("create schema tfmkt")
+    op.execute("create schema transfermarkt")
 
 
 def downgrade() -> None:
     op.execute("drop schema fbref")
     op.execute("drop schema sofascore")
-    op.execute("drop schema tfmkt")
+    op.execute("drop schema transfermarkt")

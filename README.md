@@ -75,7 +75,22 @@ Example: LaLiga 23/24
 scrapy crawl sofascore -a TOURNAMENT_ID=8 -a SEASON_ID=52376
 ```
 
-#### FBRef
+#### Transfermarkt
+
+```bash
+scrapy crawl transfermarkt -a TOURNAMENT_ID=<tournament_id> -a SEASON_ID=<season_id>
+```
+
+Where `<tournament_id>` and `<season_id>` are the tournament and season identifiers, respectively.
+They can be found in the URL of the tournament page on Transfermarkt.
+
+Example: LaLiga 23/24
+
+```bash
+scrapy crawl transfermarkt -a TOURNAMENT_ID=ES1 -a SEASON_ID=2023
+```
+
+#### FBref
 
 ```bash
 scrapy crawl <spider_name>

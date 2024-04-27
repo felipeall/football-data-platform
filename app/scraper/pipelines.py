@@ -11,7 +11,7 @@ from app.services.aws import AWS
 class ParseItemPipeline:
     REGEX = {
         "transfermarkt": {
-            "competitions": r"startseite-wettbewerb-(?P<id>\w+)-saison_id-(?P<season_id>\d+)",
+            "competitions": r"startseite-wettbewerb-(?P<id>\w+)-plus--saison_id-(?P<season_id>\d+)",
             "clubs": r"startseite-verein-(?P<id>\d+)-saison_id-(?P<season_id>\d+)",
             "players": r"profil-spieler-(?P<id>\d+)",
             "market_value": r"-ceapi-marketValueDevelopment-graph-(?P<id>\d+)",
@@ -44,7 +44,7 @@ class ParseItemPipeline:
 
     @staticmethod
     def __parse_file_name(url: str) -> str:
-        page_name = url.split("://")[-1].replace("/", "-")
+        page_name = url.split("://")[-1].replace("/", "-").replace("?", "-").replace("=", "-")
         return "".join([i if ord(i) < 128 else "-" for i in page_name])
 
     def __extract_id(self, file_name: str, path: str) -> str:
