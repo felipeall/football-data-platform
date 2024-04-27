@@ -27,8 +27,10 @@ class SofascoreTeams:
                 id=data_team["id"],
                 name=data_team["name"],
                 full_name=data_team["fullName"],
-                country=data_team["country"]["name"],
-                country_code=data_team["country"]["alpha2"],
+                country=data_team.get("country", {}).get("name")
+                or data_team.get("primaryUniqueTournament").get("category").get("country").get("name"),
+                country_code=data_team.get("country", {}).get("alpha2")
+                or data_team.get("primaryUniqueTournament").get("category").get("country").get("alpha2"),
                 league_id=data_team["primaryUniqueTournament"]["id"],
                 league_name=data_team["primaryUniqueTournament"]["name"],
                 scrapped_at=datetime.fromtimestamp(data.get("scrapped_at"), tz=timezone.utc),

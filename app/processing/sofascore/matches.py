@@ -61,9 +61,9 @@ class SofascoreMatches:
                 match = sofascore.SofascoreMatches(
                     id=event.get("id"),
                     date=datetime.fromtimestamp(event.get("startTimestamp"), tz=timezone.utc),
-                    tournament_id=event.get("tournament").get("id"),
+                    tournament_id=event.get("tournament").get("uniqueTournament").get("id"),
                     season_id=event.get("season").get("id"),
-                    round=event.get("roundInfo").get("round"),
+                    round=event.get("roundInfo", {}).get("round"),
                     status_id=event.get("status").get("code"),
                     home_team_id=event.get("homeTeam").get("id"),
                     away_team_id=event.get("awayTeam").get("id"),
