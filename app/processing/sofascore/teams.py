@@ -1,6 +1,5 @@
 import json
 from dataclasses import dataclass
-from datetime import datetime, timezone
 
 from app.models import sofascore
 from app.processing.base import BaseProcessing
@@ -8,7 +7,7 @@ from app.processing.base import BaseProcessing
 
 @dataclass
 class SofascoreTeams(BaseProcessing):
-    files_path: str = "files/sofascore/teams"
+    files_path: str = "files/sofascore/teams/"
 
     def run(self):
         for data in self.files_data:
@@ -24,7 +23,7 @@ class SofascoreTeams(BaseProcessing):
                 or data_team.get("primaryUniqueTournament").get("category").get("country").get("alpha2"),
                 league_id=data_team["primaryUniqueTournament"]["id"],
                 league_name=data_team["primaryUniqueTournament"]["name"],
-                scrapped_at=datetime.fromtimestamp(data.get("scrapped_at"), tz=timezone.utc),
+                scrapped_at=self.parse_timestamp(data.get("scrapped_at")),
             )
 
             self.db.upsert_from_model(team)

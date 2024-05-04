@@ -10,8 +10,8 @@ from app.scraper.items import ScrappedItem
 log = logging.getLogger(__name__)
 
 
-class Sofascore(Spider):
-    name = "sofascore"
+class SofascoreSeason(Spider):
+    name = "sofascore_season"
     allowed_domains = ["api.sofascore.com"]
     start_urls = [
         "https://api.sofascore.com/api/v1/unique-tournament/{tournament_id}/season/{season_id}/events/last/{page_id}",
@@ -24,7 +24,7 @@ class Sofascore(Spider):
     SEASON_ID = ""
 
     def __init__(self, *args, **kwargs):
-        super(Sofascore, self).__init__(*args, **kwargs)
+        super(SofascoreSeason, self).__init__(*args, **kwargs)
         if not self.TOURNAMENT_ID:
             log.error("TOURNAMENT_ID is required")
             raise ValueError("TOURNAMENT_ID is required")

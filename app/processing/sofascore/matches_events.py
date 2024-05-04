@@ -1,6 +1,5 @@
 import json
 from dataclasses import dataclass
-from datetime import datetime, timezone
 
 from app.models import sofascore
 from app.processing.base import BaseProcessing
@@ -12,10 +11,10 @@ class SofascoreMatchesEvents(BaseProcessing):
 
     def run(self):
         for data in self.files_data:
-            matches_events_data = json.loads(data["data"])
+            data_matches_events = json.loads(data["data"])
             teams_players = {
-                data.get("metadata").get("home_team_id"): matches_events_data["home"]["players"],
-                data.get("metadata").get("away_team_id"): matches_events_data["away"]["players"],
+                data.get("metadata").get("home_team_id"): data_matches_events["home"]["players"],
+                data.get("metadata").get("away_team_id"): data_matches_events["away"]["players"],
             }
 
             for team_id, team_players in teams_players.items():
@@ -27,17 +26,17 @@ class SofascoreMatchesEvents(BaseProcessing):
                         player_id=player.get("player").get("id"),
                         team_id=team_id,
                         has_statistics=bool(statistics),
-                        scrapped_at=datetime.fromtimestamp(data.get("scrapped_at"), tz=timezone.utc),
+                        scrapped_at=self.parse_timestamp(data.get("scrapped_at")),
                     )
                     match_events = sofascore.SofascoreMatchesEvents(**metadata, **statistics)
 
                     self.db.upsert_from_model(match_events)
 
     @staticmethod
-    def camel_to_snake(name):
+    def camel_to_snake(name: str) -> str:
         return "".join(["_" + i.lower() if i.isupper() else i for i in name]).lstrip("_")
 
-    def flatten(self, d, parent_key="", sep="_"):
+    def flatten(self, d: dict, parent_key: str = "", sep: str = "_") -> dict:
         items = {}
         for k, v in d.items():
             new_key = parent_key + sep + k if parent_key else k

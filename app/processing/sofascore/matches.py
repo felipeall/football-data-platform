@@ -1,6 +1,5 @@
 import json
 from dataclasses import dataclass
-from datetime import datetime, timezone
 
 from app.models import sofascore
 from app.processing.base import BaseProcessing
@@ -12,7 +11,7 @@ class SofascoreMatches(BaseProcessing):
 
     def run(self):
         for data in self.files_data:
-            events: dict = json.loads(data["data"]).get("events")
+            events: list[dict] = json.loads(data["data"]).get("events")
 
             for event in events:
                 tournament = sofascore.SofascoreTournaments(
@@ -37,7 +36,7 @@ class SofascoreMatches(BaseProcessing):
                     .get("uniqueTournament")
                     .get("hasEventPlayerStatistics")
                     or False,
-                    scrapped_at=datetime.fromtimestamp(data.get("scrapped_at"), tz=timezone.utc),
+                    scrapped_at=self.parse_timestamp(data.get("scrapped_at")),
                 )
 
                 season = sofascore.SofascoreSeasons(
@@ -45,12 +44,12 @@ class SofascoreMatches(BaseProcessing):
                     name=event.get("season").get("name"),
                     tournament_id=event.get("tournament").get("uniqueTournament").get("id"),
                     year=event.get("season").get("year"),
-                    scrapped_at=datetime.fromtimestamp(data.get("scrapped_at"), tz=timezone.utc),
+                    scrapped_at=self.parse_timestamp(data.get("scrapped_at")),
                 )
 
                 match = sofascore.SofascoreMatches(
                     id=event.get("id"),
-                    date=datetime.fromtimestamp(event.get("startTimestamp"), tz=timezone.utc),
+                    date=self.parse_timestamp(event.get("startTimestamp")),
                     tournament_id=event.get("tournament").get("uniqueTournament").get("id"),
                     season_id=event.get("season").get("id"),
                     round=event.get("roundInfo", {}).get("round"),
@@ -60,7 +59,7 @@ class SofascoreMatches(BaseProcessing):
                     home_score=event.get("homeScore").get("current"),
                     away_score=event.get("awayScore").get("current"),
                     has_players_statistics=event.get("hasEventPlayerStatistics") or False,
-                    scrapped_at=datetime.fromtimestamp(data.get("scrapped_at"), tz=timezone.utc),
+                    scrapped_at=self.parse_timestamp(data.get("scrapped_at")),
                 )
 
                 self.db.upsert_from_model(tournament)

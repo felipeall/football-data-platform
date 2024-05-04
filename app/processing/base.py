@@ -1,4 +1,6 @@
 from dataclasses import dataclass
+from datetime import datetime, timezone
+from typing import Optional
 
 from tqdm import tqdm
 
@@ -13,11 +15,17 @@ class BaseProcessing:
     files_path: str = ""
 
     @property
-    def files(self):
+    def files(self) -> list:
         return self.aws.list_files(self.files_path)
 
     @property
-    def files_data(self):
+    def files_data(self) -> iter:
         for file in (pbar := tqdm(self.files)):
             pbar.set_description(file)
             yield self.aws.read_from_json(file_path=file)
+
+    @staticmethod
+    def parse_timestamp(timestamp: Optional[int]) -> Optional[datetime]:
+        if not timestamp:
+            return None
+        return datetime.fromtimestamp(timestamp, tz=timezone.utc)

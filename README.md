@@ -63,7 +63,11 @@ alembic upgrade head
 #### Sofascore
 
 ```bash
-scrapy crawl sofascore -a TOURNAMENT_ID=<tournament_id> -a SEASON_ID=<season_id>
+scrapy crawl sofascore_tournament -a TOURNAMENT_ID=<tournament_id> -a SEASON_ID=<season_id>
+```
+
+```bash
+scrapy crawl sofascore_season -a TOURNAMENT_ID=<tournament_id> -a SEASON_ID=<season_id>
 ```
 
 Where `<tournament_id>` and `<season_id>` are the tournament and season identifiers, respectively.
@@ -72,7 +76,7 @@ They can be found in the URL of the tournament page on Sofascore.
 Example: LaLiga 23/24
 
 ```bash
-scrapy crawl sofascore -a TOURNAMENT_ID=8 -a SEASON_ID=52376
+scrapy crawl sofascore_season -a TOURNAMENT_ID=8 -a SEASON_ID=52376
 ```
 
 #### Transfermarkt
