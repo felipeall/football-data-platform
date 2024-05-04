@@ -2,6 +2,8 @@ import json
 import logging
 from typing import Optional
 
+import requests
+from bs4 import BeautifulSoup
 from scrapy import Request, Spider
 from scrapy.http import HtmlResponse
 
@@ -10,35 +12,55 @@ from app.scraper.items import ScrappedItem
 log = logging.getLogger(__name__)
 
 
-class SofascoreSeason(Spider):
-    name = "sofascore_season"
+class Sofascore(Spider):
+    name = "sofascore"
     allowed_domains = ["api.sofascore.com"]
-    start_urls = [
-        "https://api.sofascore.com/api/v1/unique-tournament/{tournament_id}/season/{season_id}/events/last/{page_id}",
-    ]
     custom_settings = {
         "DEPTH_LIMIT": 0,
     }
-
+    URL_TOURNAMENT = "https://www.sofascore.com/tournament/football/-/-/{tournament_id}"
+    URL_SEASON_INFO = (
+        "https://api.sofascore.com/api/v1/unique-tournament/{tournament_id}/season/{season_id}/statistics/info"
+    )
+    URL_SEASON_EVENTS = (
+        "https://api.sofascore.com/api/v1/unique-tournament/{tournament_id}/season/{season_id}/events/last/{page_id}"
+    )
     TOURNAMENT_ID = ""
     SEASON_ID = ""
 
     def __init__(self, *args, **kwargs):
-        super(SofascoreSeason, self).__init__(*args, **kwargs)
+        super(Sofascore, self).__init__(*args, **kwargs)
         if not self.TOURNAMENT_ID:
             log.error("TOURNAMENT_ID is required")
             raise ValueError("TOURNAMENT_ID is required")
         if not self.SEASON_ID:
-            log.error("SEASON_ID is required")
-            raise ValueError("SEASON_ID is required")
+            log.info("SEASON_ID not provided, processing all tournament seasons")
+
+    def _get_seasons_to_crawl(self) -> list[dict]:
+        if self.SEASON_ID:
+            return [{"id": self.SEASON_ID}]
+        r = requests.get(self.URL_TOURNAMENT.format(tournament_id=self.TOURNAMENT_ID))
+        r.raise_for_status()
+        data = json.loads(BeautifulSoup(r.content, "lxml").find("script", {"id": "__NEXT_DATA__"}).text)
+        seasons = data["props"]["pageProps"]["seasons"]
+        seasons_valid = []
+        for season in seasons:
+            r = requests.get(self.URL_SEASON_INFO.format(tournament_id=self.TOURNAMENT_ID, season_id=season["id"]))
+            if r.status_code == 200:
+                seasons_valid.append(season)
+        return seasons_valid
 
     def start_requests(self):
-        page_id = 0
-        for url in self.start_urls:
-            url_formatted = url.replace("{tournament_id}", self.TOURNAMENT_ID).replace("{season_id}", self.SEASON_ID)
+        seasons = self._get_seasons_to_crawl()
+        for season in seasons:
+            log.debug(f"Processing season: {season}")
+            url_formatted = self.URL_SEASON_EVENTS.replace("{tournament_id}", self.TOURNAMENT_ID).replace(
+                "{season_id}",
+                str(season["id"]),
+            )
             yield Request(
-                url_formatted.format(page_id=page_id),
-                meta={"start_url": url_formatted, "page_id": page_id},
+                url_formatted.format(page_id=0),
+                meta={"start_url": url_formatted, "page_id": 0},
                 callback=self._process_results,
                 cb_kwargs={"path": "matches"},
             )
