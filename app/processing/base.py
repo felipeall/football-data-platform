@@ -13,6 +13,7 @@ class BaseProcessing:
     aws: AWS = AWS()
     db: Database = Database()
     files_path: str = ""
+    full_load: bool = True
 
     @property
     def files(self) -> list:

@@ -108,14 +108,22 @@ The available spiders are:
 
 ### Processing
 
-```bash
-python app/processing/sofascore
-```
+usage: 
 
-```bash
-python app/processing/transfermarkt
-```
+> processing [-h] [--full-load] [--debug] [{sofascore,transfermarkt}]
 
+positional arguments:
+
+> {sofascore,transfermarkt} Source to process data from.
+
+optional arguments:
+
+> -h, --help            show this help message and exit  
+  --full-load           Process and load all data from the source  
+  --debug               Enable debug mode.
+
+Example:
+    
 ```bash
-python app/processing/fbref
+python app/processing sofascore --full-load
 ```

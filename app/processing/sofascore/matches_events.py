@@ -10,7 +10,10 @@ class SofascoreMatchesEvents(BaseProcessing):
     files_path: str = "files/sofascore/matches_events/"
 
     def run(self):
+        latest_scrapped_at = self.db.get_latest_scrapped_at(sofascore.SofascoreMatchesEvents())
+
         for data in self.files_data:
+            scrapped_at = self.parse_timestamp(data.get("scrapped_at"))
             data_matches_events = json.loads(data["data"])
             teams_players = {
                 data.get("metadata").get("home_team_id"): data_matches_events["home"]["players"],
@@ -26,11 +29,12 @@ class SofascoreMatchesEvents(BaseProcessing):
                         player_id=player.get("player").get("id"),
                         team_id=team_id,
                         has_statistics=bool(statistics),
-                        scrapped_at=self.parse_timestamp(data.get("scrapped_at")),
+                        scrapped_at=scrapped_at,
                     )
                     match_events = sofascore.SofascoreMatchesEvents(**metadata, **statistics)
 
-                    self.db.upsert_from_model(match_events)
+                    if self.full_load or scrapped_at > latest_scrapped_at:
+                        self.db.upsert_from_model(match_events)
 
     @staticmethod
     def camel_to_snake(name: str) -> str:

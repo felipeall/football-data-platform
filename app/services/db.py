@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from datetime import datetime
 from typing import Literal, Type
 
 import pandas as pd
@@ -26,9 +27,7 @@ class Database:
         """Build an upsert statement for a given table."""
         insert_stmt = insert(sql_table).values(values_to_insert)
         update_stmt = {
-            c.name: c
-            for c in insert_stmt.excluded
-            if not c.primary_key and c.name not in ["scrapped_at", "created_at", "updated_at"]
+            c.name: c for c in insert_stmt.excluded if not c.primary_key and c.name not in ["created_at", "updated_at"]
         }
         return insert_stmt.on_conflict_do_update(
             constraint=self.__get_constraint_name(sql_table),
@@ -66,18 +65,30 @@ class Database:
 
     def upsert_from_model(self, model: BaseMixin):
         """Upsert the data from a model to the database."""
-        table = model.__tablename__
-        schema = next((arg.get("schema") for arg in model.__table_args__ if isinstance(arg, dict)), None)
-        sql_table = Table(table, Base.metadata, schema=schema)
+        table, schema, sql_table = self.__get_model_info(model)
         upsert_stmt = self.__build_upsert_stmt(sql_table, [model.to_dict()])
 
         with self.engine.begin() as conn:
             try:
                 conn.execute(upsert_stmt)
             except IntegrityError as e:
-                logger.warning(f"Failed loading to {schema}.{table}: {str(e.orig).replace(chr(10), '. ')}")
+                logger.debug(f"Failed loading to {schema}.{table}: {str(e.orig).replace(chr(10), '. ')}")
 
     @property
     def __inspector(self):
         """Return the database inspector."""
         return Inspector.from_engine(self.engine)
+
+    @staticmethod
+    def __get_model_info(model: BaseMixin) -> tuple[str, str, Table]:
+        """Return the table name and schema for a given model."""
+        table = model.__tablename__
+        schema = next((arg.get("schema") for arg in model.__table_args__ if isinstance(arg, dict)), None)
+        sql_table = Table(table, Base.metadata, schema=schema)
+        return table, schema, sql_table
+
+    def get_latest_scrapped_at(self, model: BaseMixin) -> datetime:
+        """Return the latest scrapped_at timestamp from the database."""
+        table, schema, _ = self.__get_model_info(model)
+        with self.engine.connect() as conn:
+            return conn.execute(f"SELECT MAX(scrapped_at) FROM {schema}.{table}").scalar()
