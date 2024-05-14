@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 import boto3
 from botocore.client import BaseClient
+from botocore.exceptions import ClientError
 from mypy_boto3_s3 import ServiceResource
 from mypy_boto3_s3.service_resource import Bucket
 
@@ -46,3 +47,10 @@ class AWS:
 
     def list_files(self, path: str) -> list:
         return [obj.key for obj in list(self.bucket.objects.filter(Prefix=path))]
+
+    def file_exists(self, file_path: str) -> bool:
+        try:
+            self.client.head_object(Bucket=settings.AWS_BUCKET_NAME, Key=file_path)
+            return True
+        except ClientError:
+            return False

@@ -14,9 +14,13 @@ class BaseProcessing:
     db: Database = Database()
     files_path: str = ""
     full_load: bool = True
+    file_path: Optional[str] = None
 
     @property
     def files(self) -> list:
+        if self.file_path:
+            bucket_file_path = self.files_path + self.file_path
+            return [bucket_file_path] if self.aws.file_exists(bucket_file_path) else []
         return self.aws.list_files(self.files_path)
 
     @property

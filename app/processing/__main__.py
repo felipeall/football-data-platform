@@ -15,6 +15,11 @@ parser.add_argument(
     choices=["sofascore", "transfermarkt"],
 )
 parser.add_argument(
+    "--file",
+    type=str,
+    help="Ingest only a single file.",
+)
+parser.add_argument(
     "--full-load",
     action="store_true",
     help="Process and load all data from the source.",
@@ -32,10 +37,10 @@ logger.debug(f"{args=}")
 
 if args.source == "sofascore":
     logger.info("Started Sofascore processing")
-    sofascore_matches = matches.SofascoreMatches(full_load=args.full_load)
-    sofascore_teams = teams.SofascoreTeams(full_load=args.full_load)
-    sofascore_players = players.SofascorePlayers(full_load=args.full_load)
-    sofascore_matches_events = matches_events.SofascoreMatchesEvents(full_load=args.full_load)
+    sofascore_matches = matches.SofascoreMatches(file_path=args.file, full_load=args.full_load)
+    sofascore_teams = teams.SofascoreTeams(file_path=args.file, full_load=args.full_load)
+    sofascore_players = players.SofascorePlayers(file_path=args.file, full_load=args.full_load)
+    sofascore_matches_events = matches_events.SofascoreMatchesEvents(file_path=args.file, full_load=args.full_load)
 
     logger.info("Running Sofascore Teams")
     sofascore_teams.run()

@@ -32,6 +32,8 @@ class SofascoreMatchesEvents(BaseProcessing):
                         scrapped_at=scrapped_at,
                     )
                     match_events = sofascore.SofascoreMatchesEvents(**metadata, **statistics)
+                    if player.get("player").get("name") == "Lionel Messi":
+                        print(match_events)
 
                     if self.full_load or scrapped_at > latest_scrapped_at:
                         self.db.upsert_from_model(match_events)
