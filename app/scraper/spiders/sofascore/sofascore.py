@@ -112,6 +112,14 @@ class Sofascore(Spider):
             players_ids_home = [d["player"]["id"] for d in data["home"]["players"]]
             players_ids_away = [d["player"]["id"] for d in data["away"]["players"]]
 
+            # Process Players
             for player_id in players_ids_home + players_ids_away:
                 player_url = f"https://api.sofascore.com/api/v1/player/{player_id}"
                 yield Request(player_url, callback=self._process_results, cb_kwargs={"path": "players"})
+
+        # Process Players' current team
+        if path == "players":
+            data = json.loads(response.body)
+            team_id = data["player"]["team"]["id"]
+            team_url = f"https://api.sofascore.com/api/v1/team/{team_id}"
+            yield Request(team_url, callback=self._process_results, cb_kwargs={"path": "teams"})
