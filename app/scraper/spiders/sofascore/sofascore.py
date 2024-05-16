@@ -96,15 +96,14 @@ class Sofascore(Spider):
                 )
 
             # Process Next Page
-            if data.get("hasNextPage"):
-                next_page_id = 1 + response.meta.get("page_id")
-                next_page_url = response.meta.get("start_url").format(page_id=next_page_id)
-                yield Request(
-                    next_page_url,
-                    meta={"start_url": response.meta.get("start_url"), "page_id": next_page_id},
-                    callback=self._process_results,
-                    cb_kwargs={"path": "matches"},
-                )
+            next_page_id = 1 + response.meta.get("page_id")
+            next_page_url = response.meta.get("start_url").format(page_id=next_page_id)
+            yield Request(
+                next_page_url,
+                meta={"start_url": response.meta.get("start_url"), "page_id": next_page_id},
+                callback=self._process_results,
+                cb_kwargs={"path": "matches"},
+            )
 
         if path == "matches_events":
             data = json.loads(response.body)
