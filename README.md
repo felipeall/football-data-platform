@@ -1,5 +1,6 @@
 # Football Data Platform 
-###### _WIP: This project is still under development, more updates to come_
+> [!NOTE]
+> **Archived.** This project is superseded by [football-data-ai-platform](https://github.com/felipeall/football-data-ai-platform).
 
 The **Football Data Platform** is a comprehensive data aggregation tool tailored for football enthusiasts, analysts, 
 and researchers. It collects football-related data from popular platforms: 
